@@ -20,7 +20,7 @@ def _run_subprocesses(args, status, error_message):
     stdoutdata, stderrdata = process.communicate()
     _check_subprocess_run(process.returncode, stderrdata, "extracting unmapped")
 
-def map2viralgenome(args, bowtie2path):
+def map2viralgenome(args, bowtie2path, samtoolspath):
 
     # -- check if libraries are present if not generate 
     files = glob.glob(args.path2genome+"/*.bt2")
@@ -38,3 +38,14 @@ def map2viralgenome(args, bowtie2path):
     arg=[bowtie2path+"bowtie2", "-q", args.output_path+"_tmp/unmmapped.fq", "-x", args.path2genome+"genome", "-S", args.output_path+"virus_aligned.sam"]
     _run_subprocesses(arg, "STATUS: Align reads ...", "aligning reads")
     
+    # --generate necessary output files
+    arg=[samtoolspath+"samtools", "view", "-F", "4", "-Sb", args.output_path+"virus_aligned.sam", "-o", args.output_path+"virus_aligned.bam"]
+    _run_subprocesses(arg, "STATUS: Extracting mapped reads and converting to bam", "extracting mapped reads and converting to bam")
+
+    arg=[samtoolspath+"samtools", "sort", args.output_path+"virus_aligned.bam", "-o", args.output_path+"viral_aligned_sort.bam"]
+    _run_subprocesses(arg, "STATUS: Sorting bam", "sorting bam")
+
+    arg=[samtoolspath+"samtools", "index", args.output_path+"virus_aligned_sort.bam", "viral_aligned_sort.bam.bai"]
+    _run_subprocesses(arg, "STATUS: generating bam index", "generating bam index")
+
+
