@@ -5,7 +5,6 @@ __description__ = "pull out necessary 10x cells"
 import os
 import re
 import gzip
-import subprocess
 
 def extract_viable_10x(path10x):
     print ("STATUS: pull out viable cells")
