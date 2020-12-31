@@ -30,7 +30,7 @@ def parse_arguments():
     return parser.parse_args()
 
 pr.process_unmapped_reads(args, samtoolspath)
-mr.map2viralgenome(args, bowtie2path)
+mr.map2viralgenome(args, bowtie2path, samtoolspath)
 
 
 
