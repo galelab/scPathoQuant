@@ -29,11 +29,11 @@ def integrate_data_2_matrix(path10x, dfumi, gene_name):
     mat = coo_matrix(mat)
     gene_names.append((gene_name, gene_name, "Gene Expression"))
     scipy.io.mmwrite(os.path.join(path10x,"outs","filtered_feature_bc_matrix","matrix"), mat)
-    arg=['gzip', os.path.join(path10x,"outs","filtered_feature_bc_matrix","matrix.mtx")]
+    arg=['gzip', "-f", os.path.join(path10x,"outs","filtered_feature_bc_matrix","matrix.mtx")]
     ef._run_subprocesses(arg, "STATUS: zipping new matrix file", "zipping new matrix file")
     f_in = open(os.path.join(path10x,"outs","filtered_feature_bc_matrix","features.tsv"), 'w')
     for i in gene_names:
         f_in.write(i[0]+"\t"+i[1]+"\t"+i[2]+"\n")
     f_in.close()
-    arg=['gzip', os.path.join(path10x,"outs","filtered_feature_bc_matrix","features.tsv")]
+    arg=['gzip', "-f", os.path.join(path10x,"outs","filtered_feature_bc_matrix","features.tsv")]
     ef._run_subprocesses(arg, "STATUS: zipping new features file", "zipping new features file")    
