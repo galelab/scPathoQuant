@@ -44,7 +44,7 @@ def process_unmapped_reads(args, samtoolspath, viable_cb):
     print ("STATUS: extracting cell barcodes and UMIs...")
     with open(os.path.join(args.output_path, "_tmp"," barcode_umi_read_table.csv"), "w") as fout:
         fout.write("cell_barcode,umi,read\n")
-        with open(args.output_path+"_tmp"+"/unmapped.sam") as fin:
+        with open(os.path.join(args.output_path,"_tmp","unmapped.sam")) as fin:
             for line in fin:
                 if line.startswith("@"):
                     pass
