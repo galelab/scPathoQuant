@@ -12,15 +12,13 @@ from process_10x import extract10x as ex
 from quantify import viral_copies as vc
 from visualization import viz 
 PATH = os.path.dirname(os.path.abspath(__file__))
-samtoolspath = PATH+"/extra_tools/samtoolsv1.11_linux/bin/"
 if platform == "linux":
     bowtie2path = PATH+"/aligntools/bowtie2-2.4.2-linux-x86_64/"
+    samtoolspath = PATH+"/extra_tools/samtoolsv1.11_linux/bin/"
 elif platform == "OS":
     bowtie2path = PATH+"/aligntools/bowtie2-2.4.2-macos-x86_64/"
 else:
     ValueError("Program wont run on this operating system "+platform)
-
-args = parse_arguments()
 
 def parse_arguments():
     parser = argparse.ArgumentParser(prog="scViralQuant", description="Quantify sc viral mapping reads")
