@@ -30,10 +30,11 @@ def parse_arguments():
 
     return parser.parse_args()
 
-args = parse_arguments()
-viable_cb=ex.extract_viable_10x(args.path10x)
-pr.process_unmapped_reads(args, samtoolspath, viable_cb)
-mr.map2viralgenome(args, bowtie2path, samtoolspath)
-dfvc, gene_name = vc.htseq_run(args)
-viz.generate_viral_copy_plots(args, gene_name, dfvc)
-integrate.integrate_data_2_matrix(args.path10x, dfvc, gene_name)
+if __name__ == '__main__':
+    args = parse_arguments()
+    viable_cb=ex.extract_viable_10x(args.path10x)
+    pr.process_unmapped_reads(args, samtoolspath, viable_cb)
+    mr.map2viralgenome(args, bowtie2path, samtoolspath)
+    dfvc, gene_name = vc.htseq_run(args)
+    viz.generate_viral_copy_plots(args, gene_name, dfvc)
+    integrate.integrate_data_2_matrix(args.path10x, dfvc, gene_name)
