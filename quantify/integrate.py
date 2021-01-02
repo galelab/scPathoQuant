@@ -13,7 +13,7 @@ import extra_functions as ef
 
 def integrate_data_2_matrix(path10x, dfumi, gene_name):
     viralcopy = []
-    print ("STATUS: Integrating data")
+    print ("STATUS: Integrating data into 10x matrix and feature files")
     mat = scipy.io.mmread(os.path.join(path10x,"outs","filtered_feature_bc_matrix","matrix.mtx.gz"))
     gene_names = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs","filtered_feature_bc_matrix","features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
     barcodes = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs","filtered_feature_bc_matrix","barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]

@@ -25,7 +25,7 @@ def process_unmapped_reads(args, samtoolspath, viable_cb):
     # -- pull out unmapped reads
     arg=[samtoolspath+"samtools", "view", "-@", args.processors,
         "-b", "-h", "-f", "4", os.path.join(args.path10x, "outs", "possorted_genome_bam.bam"),
-        "-o",  os.path.join(args.output_path, "_tmp","unmmapped.bam")]
+        "-o",  os.path.join(args.output_path, "_tmp","unmapped.bam")]
     process = subprocess.Popen(arg, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
     # print("STATUS: Extracting unmapped reads..")
     stdoutdata, stderrdata = process.communicate()
@@ -42,7 +42,7 @@ def process_unmapped_reads(args, samtoolspath, viable_cb):
 
     # -- pull out umi and cell barcode information 
     print ("STATUS: extracting cell barcodes and UMIs...")
-    with open(os.path.join(args.output_path, "_tmp"," barcode_umi_read_table.csv"), "w") as fout:
+    with open(os.path.join(args.output_path, "_tmp", "barcode_umi_read_table.csv"), "w") as fout:
         fout.write("cell_barcode,umi,read\n")
         with open(os.path.join(args.output_path,"_tmp","unmapped.sam")) as fin:
             for line in fin:
@@ -62,8 +62,8 @@ def process_unmapped_reads(args, samtoolspath, viable_cb):
                         fout.write(re.sub("CB:Z:", "", cellbarcode)+","+re.sub("UB:Z:", "", umi)+","+larray[0]+"\n")
 
     # -- convert to fastq file
-    arg = [samtoolspath+"samtools", "bam2fq", "-@", args.processors, "-n","-O", "-s", os.path.join(args.output_path, "_tmp", "ummapped.fq"), os.path.join(args.output_path,"_tmp","unmmapped.bam")]
-    f = open(args.output_path+"_tmp"+"ummapped.fq" "w") 
+    arg = [samtoolspath+"samtools", "bam2fq", "-@", args.processors, "-n","-O", "-s", os.path.join(args.output_path, "_tmp", "unmapped.fq"), os.path.join(args.output_path,"_tmp","unmapped.bam")]
+    f = open(os.path.join(args.output_path, "_tmp", "unmapped.fq"), "w") 
     process = subprocess.Popen(arg, stdout=f, stderr=subprocess.PIPE)
     stdoutdata, stderrdata = process.communicate()
     f.close()

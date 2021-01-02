@@ -10,6 +10,7 @@ from map_reads import process_reads as pr
 from map_reads import map_reads as mr
 from process_10x import extract10x as ex
 from quantify import viral_copies as vc
+from quantify import integrate
 from visualization import viz 
 PATH = os.path.dirname(os.path.abspath(__file__))
 if platform == "linux":
@@ -34,4 +35,5 @@ viable_cb=ex.extract_viable_10x(args.path10x)
 pr.process_unmapped_reads(args, samtoolspath, viable_cb)
 mr.map2viralgenome(args, bowtie2path, samtoolspath)
 dfvc, gene_name = vc.htseq_run(args)
-viz.generate_viral_copy_plots(args, dfvc, gene_name)
+viz.generate_viral_copy_plots(args, gene_name, dfvc)
+integrate.integrate_data_2_matrix(args.path10x, dfvc, gene_name)
