@@ -11,9 +11,11 @@ def _check_subprocess_run(returncode, stderrdata, runinfo):
         print("WARNING: Issue with "+runinfo+" reads")
         print(stderrdata)
 
-def _run_subprocesses(args, status, error_message):
+def _run_subprocesses(args, status, error_message, verbose=False):
     process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
     print("STATUS: "+status)
     stdoutdata, stderrdata = process.communicate()
-    print (stdoutdata)
+    if verbose is True:
+        print (stdoutdata)
+        print (stderrdata)
     _check_subprocess_run(process.returncode, stderrdata, error_message)
