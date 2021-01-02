@@ -13,7 +13,7 @@ def _check_subprocess_run(returncode, stderrdata, runinfo):
 
 def _run_subprocesses(args, status, error_message, verbose=False):
     process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
-    print("STATUS: "+status)
+    print(status)
     stdoutdata, stderrdata = process.communicate()
     if verbose is True:
         print (stdoutdata)
