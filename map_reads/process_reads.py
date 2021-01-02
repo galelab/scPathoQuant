@@ -30,7 +30,7 @@ def process_unmapped_reads(args, samtoolspath, viable_cb):
     stdoutdata, stderrdata = process.communicate()
     _check_subprocess_run(process.returncode, stderrdata, "extracting unmapped")
     
-    args=[samtoolspath+"samtools","view" "-h", args.output_path+"_tmp"+"/unmapped.bam", "-o", args.output_path+"_tmp"+"/unmapped.sam"]
+    args=[samtoolspath+"samtools","view" "-@", args.processors, "-h", args.output_path+"_tmp"+"/unmapped.bam", "-o", args.output_path+"_tmp"+"/unmapped.sam"]
     process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
     print("STATUS: Convert bam to sam for unmmaped reads..")
     stdoutdata, stderrdata = process.communicate()
@@ -59,7 +59,7 @@ def process_unmapped_reads(args, samtoolspath, viable_cb):
                         fout.write(re.sub("CB:Z:", "", cellbarcode)+","+re.sub("UB:Z:", "", umi)+","+larray[0]+"\n")
 
     # -- convert to fastq file
-    args = [samtoolspath+"samtools", "bam2fq", "-n","-O", "-s", args.output_path+"_tmp"+"ummapped.fq", args.output_path+"_tmp"+"unmmapped.bam"]
+    args = [samtoolspath+"samtools", "bam2fq", "-@", args.processors, "-n","-O", "-s", args.output_path+"_tmp"+"ummapped.fq", args.output_path+"_tmp"+"unmmapped.bam"]
     f = open(args.output_path+"_tmp"+"ummapped.fq" "w") 
     process = subprocess.Popen(args, stdout=f, stderr=subprocess.PIPE)
     stdoutdata, stderrdata = process.communicate()

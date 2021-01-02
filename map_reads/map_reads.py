@@ -22,11 +22,11 @@ def map2viralgenome(args, bowtie2path, samtoolspath):
         print("STATUS: libraries have already been made for this genome")
 
     # -- align reads 
-    arg=[bowtie2path+"bowtie2", "-q", args.output_path+"_tmp/unmmapped.fq", "-x", args.path2genome+"genome", "-S", args.output_path+"virus_aligned.sam"]
+    arg=[bowtie2path+"bowtie2", "-p", args.processors, "-q", args.output_path+"_tmp/unmmapped.fq", "-x", args.path2genome+"genome", "-S", args.output_path+"virus_aligned.sam"]
     ef._run_subprocesses(arg, "STATUS: Align reads ...", "aligning reads")
     
     # --generate necessary output files
-    arg=[samtoolspath+"samtools", "view", "-F", "4", "-Sb", args.output_path+"virus_aligned.sam", "-o", args.output_path+"virus_aligned.bam"]
+    arg=[samtoolspath+"samtools", "view", "-@", args.processors, "-F", "4", "-Sb", args.output_path+"virus_aligned.sam", "-o", args.output_path+"virus_aligned.bam"]
     ef._run_subprocesses(arg, "STATUS: Extracting mapped reads and converting to bam", "extracting mapped reads and converting to bam")
 
     arg=[samtoolspath+"samtools", "sort", args.output_path+"virus_aligned.bam", "-o", args.output_path+"viral_aligned_sort.bam"]
