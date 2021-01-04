@@ -8,7 +8,7 @@ import os
 import gzip
 import csv
 import numpy as np
-import extra_functions as ef
+import scqv.extra_functions as ef
 
 
 def integrate_data_2_matrix(path10x, dfumi, gene_name):
