@@ -10,6 +10,7 @@ from map_reads import process_reads as pr
 from map_reads import map_reads as mr
 from process_10x import extract10x as ex
 from quantify import viral_copies as vc
+from quantify import viral_genes as vg
 from quantify import integrate
 from visualization import viz 
 PATH = os.path.dirname(os.path.abspath(__file__))
@@ -38,3 +39,7 @@ if __name__ == '__main__':
     dfvc, gene_name = vc.htseq_run(args)
     viz.generate_viral_copy_plots(args, gene_name, dfvc)
     integrate.integrate_data_2_matrix(args.path10x, dfvc, gene_name)
+    dfgenes = vg.htseq_run(args)
+    if dfgenes is not False:
+        viz.generate_viral_gene_plots(args, dfgenes)
+        integrate.integrate_viralgenes_data_2_matrix(args.path10x, dfgenes)
