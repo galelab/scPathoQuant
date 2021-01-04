@@ -6,7 +6,7 @@ import os
 import re
 import glob
 import pandas as pd
-import extra_functions as ef
+import scqv.extra_functions as ef
 
 def quantify_reads(output_path,filename):
     

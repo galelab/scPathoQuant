@@ -5,7 +5,7 @@ __description__ = "quantify viral copies"
 import os
 import glob
 import pandas as pd
-import extra_functions as ef
+import scqv.extra_functions as ef
 
 def read_FASTA(filename):
     begin = True

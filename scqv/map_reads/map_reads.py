@@ -5,7 +5,7 @@ __description__ = "map reads with bowtie (currently only version)"
 import os
 import glob
 import subprocess
-import extra_functions as ef
+import scqv.extra_functions as ef
 
 
 def map2viralgenome(args, bowtie2path, samtoolspath):
