@@ -6,13 +6,13 @@ __description__ = "Quantifies single cell viral reads"
 import os
 import argparse
 from sys import platform
-from map_reads import process_reads as pr
-from map_reads import map_reads as mr
-from process_10x import extract10x as ex
-from quantify import viral_copies as vc
-from quantify import viral_genes as vg
-from quantify import integrate
-from visualization import viz 
+from scqv.map_reads import process_reads as pr
+from scqv.map_reads import map_reads as mr
+from scqv.process_10x import extract10x as ex
+from scqv.quantify import viral_copies as vc
+from scqv.quantify import viral_genes as vg
+from scqv.quantify import integrate
+from scqv.visualization import viz 
 PATH = os.path.dirname(os.path.abspath(__file__))
 if platform == "linux":
     bowtie2path = PATH+"/aligntools/bowtie2-2.4.2-linux-x86_64/"
