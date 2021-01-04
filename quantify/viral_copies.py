@@ -29,7 +29,7 @@ def read_FASTA(filename):
 def _generate_viral_gtf(args):
     files_genome = glob.glob(args.path2genome+"*.fa")
     if len(files_genome) > 1:
-        print ("WARNING:  two fasta files in genome folder.")
+        print ("WARNING:  too many fasta files in genome folder.")
     
     seq = read_FASTA(files_genome[0])
     if len(seq.keys()) == 1:
@@ -58,12 +58,13 @@ def quantify_reads(output_path,filename, gene_name):
     df = pd.read_csv(os.path.join(output_path,"_tmp", "barcode_umi_read_table.csv"))
     df1 = df[df['read'].isin(reads_mapping)]
     df_reads = df1.groupby(['cell_barcode', 'umi']).count()
-    df_umi = df1[["cell_barcode", "umi"]].groupby(["cell_barcode"]).count()  
+    df_umi = df_reads[["cell_barcode", "umi"]].groupby(["cell_barcode"]).count()
     df_umi.to_csv(os.path.join(output_path, "virus_al_counts.csv"))
     return(df_umi)
 
 def htseq_run(args):
     ## -- generate gtf for viral copies
+
     gene_name = _generate_viral_gtf(args)
     arg=["htseq-count", "--format=bam", "--idattr=gene_id", os.path.join(args.output_path, "virus_al_sort.bam"), os.path.join(args.output_path,"_tmp","viral_copy.gtf"), "--samout="+os.path.join(args.output_path,"virus_al_sort_counts.sam")]
     ef._run_subprocesses(arg, "STATUS: running htseq for viral copies ", "running htseq for viral copies")
