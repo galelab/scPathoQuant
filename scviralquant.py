@@ -15,10 +15,10 @@ from scqv.quantify import integrate
 from scqv.visualization import viz 
 PATH = os.path.dirname(os.path.abspath(__file__))
 if platform == "linux":
-    bowtie2path = PATH+"/aligntools/bowtie2-2.4.2-linux-x86_64/"
-    samtoolspath = PATH+"/extra_tools/samtoolsv1.11_linux/bin/"
+    bowtie2path = PATH+"/scqv/aligntools/bowtie2-2.4.2-linux-x86_64/"
+    samtoolspath = PATH+"/scqv/extra_tools/samtoolsv1.11_linux/bin/"
 elif platform == "OS":
-    bowtie2path = PATH+"/aligntools/bowtie2-2.4.2-macos-x86_64/"
+    bowtie2path = PATH+"/scqv/aligntools/bowtie2-2.4.2-macos-x86_64/"
 else:
     ValueError("Program wont run on this operating system "+platform)
 
