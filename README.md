@@ -9,6 +9,8 @@ scViralQuant is tested to work in python 3.6.8
 * htseq
 * pandas 
 
+Currently only set to run on linux
+
 ### Installation
 
 ```bash
@@ -21,8 +23,12 @@ Set the following parameters
 * -10x = Path/to/10x/sample
 * -op = path/for/results 
 * -p = number of processors (defualt = 1)
-* -p2genome = path/to/viral/fastafile - in this folder should be at most 2 files 1) the fasta file with the viral genome sequence and 2) viral gtf file.  Once bowtie2 indexes are made folder can be reused with out having to remake bowtie indexes.  Note: In the fasta file the header will be used to quantify the number of viral copies, it is recommended that if the fasta header is a complicated name it be simplified (i.e. > HIV_virus)
-* Example run: scviralquant -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafile
+* -p2genome = path/to/viral/fastafilefolder - in this folder should be at most 2 files 1) the fasta file with the viral genome sequence and 2) viral gtf file.  Once bowtie2 indexes are made folder can be reused with out having to remake bowtie indexes.  Note: In the fasta file the header will be used to quantify the number of viral copies, it is recommended that if the fasta header is a complicated name it be simplified (i.e. > HIV_virus)
+
+Example run:
+```bash 
+ scviralquant -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder
+```
 
 ### Output files 
 Output files by scViralQuant
@@ -37,4 +43,4 @@ Output files by scViralQuant
 * virus_al_sort.bam.bai - index file to virus_al_sort.bam
 * virus_al_sort_counts.sam - htseq output reads mapping to virus
 * virus_genes_al_sort_counts.sam - htseq output reads mapping to individual virus genes (will not be produced if viral gtf is not provided)
-* Over writes original 10x data provided to include viral counts and viral gene counts (if gtf file is provided)
+* Overwrites original 10x data provided to include viral counts and viral gene counts (if gtf file is provided)
