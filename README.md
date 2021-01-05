@@ -1,6 +1,6 @@
 # scViralQuant
 
-The goal of this package is to accurately align and quantify viral reads for 10x single cell data.  This software integrates viral counts and viral gene counts into 10x files (features.tsv.gz and matrix.mtx.gz in the filtred_feature_bc_matrix folder) so that softwares such as seurat can be used to analyze data
+The goal of this package is to accurately align and quantify viral reads for 10x single cell data.  This software integrates viral counts and viral gene counts into 10x files (features.tsv.gz and matrix.mtx.gz in the filtered_feature_bc_matrix folder) so that softwares such as seurat can be used to analyze data
 
 ### Dependencies
 ----------------
