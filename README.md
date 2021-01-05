@@ -6,6 +6,7 @@ The goal of this package is to accurately align and quantify viral reads for 10x
 ----------------
 scViralQuant is tested to work in python 3.6.8
 
+* argsparse
 * htseq
 * pandas 
 
