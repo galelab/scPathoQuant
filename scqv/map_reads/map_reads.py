@@ -2,13 +2,24 @@ __author__ = "Leanne Whitmore"
 __email__ = "leanne382@gmail.com"
 __description__ = "map reads with bowtie (currently only version)"
 
+import re
 import os
 import glob
 import subprocess
 import scqv.extra_functions as ef
+from sys import platform
 
+PATH = os.path.dirname(os.path.abspath(__file__))
+PATH = re.sub("map_reads", "", PATH)
+if platform == "linux":
+    bowtie2path = os.path.join(PATH, "aligntools/bowtie2-2.4.2-linux-x86_64/")
+    samtoolspath = os.path.join(PATH, "extra_tools/samtoolsv1.11_linux/bin/")
+elif platform == "OS":
+    bowtie2path = os.path.join(PATH, "aligntools/bowtie2-2.4.2-macos-x86_64/")
+else:
+    ValueError("Program wont run on this operating system "+platform)
 
-def map2viralgenome(args, bowtie2path, samtoolspath):
+def map2viralgenome(args):
 
     # -- check if libraries are present if not generate 
     files = glob.glob(args.path2genome+"/*.bt2")

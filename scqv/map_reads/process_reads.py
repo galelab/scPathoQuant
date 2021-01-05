@@ -5,6 +5,17 @@ __description__ = "processes unmapped reads"
 import re
 import os
 import subprocess
+from sys import platform
+
+PATH = os.path.dirname(os.path.abspath(__file__))
+PATH = re.sub("map_reads", "", PATH)
+if platform == "linux":
+    bowtie2path = os.path.join(PATH, "aligntools/bowtie2-2.4.2-linux-x86_64/")
+    samtoolspath = os.path.join(PATH, "extra_tools/samtoolsv1.11_linux/bin/")
+elif platform == "OS":
+    bowtie2path = os.path.join(PATH, "aligntools/bowtie2-2.4.2-macos-x86_64/")
+else:
+    ValueError("Program wont run on this operating system "+platform)
 
 def _check_subprocess_run(returncode, stderrdata, runinfo):
     if returncode == 0:
@@ -13,7 +24,7 @@ def _check_subprocess_run(returncode, stderrdata, runinfo):
         print("WARNING: Issue with "+runinfo+" reads")
         print(stderrdata)
 
-def process_unmapped_reads(args, samtoolspath, viable_cb):
+def process_unmapped_reads(args, viable_cb):
     try: 
        os.mkdir(args.output_path)
     except:
