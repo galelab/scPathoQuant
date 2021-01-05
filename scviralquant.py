@@ -46,4 +46,4 @@ if __name__ == '__main__':
         viz.generate_viral_gene_plots(args, dfgenes)
         integrate.integrate_viralgenes_data_2_matrix(args.path10x, dfgenes)
     if args.tmp_removal:
-        shutil.rmtree(args.output_path+"_tmp/")
+        shutil.rmtree(os.path.join(args.output_path,"_tmp"))
