@@ -5,6 +5,7 @@ __description__ = "Quantifies single cell viral reads"
 # ----Libraries
 import os
 import argparse
+import shutil
 from sys import platform
 from scqv.map_reads import process_reads as pr
 from scqv.map_reads import map_reads as mr
@@ -28,6 +29,7 @@ def parse_arguments():
     parser.add_argument("-op", "--output_path", default="output_scviralquant/")
     parser.add_argument("-p", "--processors", default=1)
     parser.add_argument("-p2genome", "--path2genome", type=str, required=True)
+    parser.add_argument("--tmp_removal", type=bool, required=False, default=True)
 
     return parser.parse_args()
 
@@ -43,3 +45,5 @@ if __name__ == '__main__':
     if dfgenes is not False:
         viz.generate_viral_gene_plots(args, dfgenes)
         integrate.integrate_viralgenes_data_2_matrix(args.path10x, dfgenes)
+    if args.tmp_removal:
+        shutil.rmtree(args.output_path+"_tmp/")
