@@ -46,12 +46,13 @@ def integrate_viralgenes_data_2_matrix(path10x, dfumi):
     barcodes = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs","filtered_feature_bc_matrix","barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
     uniqgenes = set(dfumi['gene'].to_list())
     counts4genes = {}
+    dfumi = dfumi.reset_index()
     for gene in uniqgenes:
         for i in barcodes:
             try:
-                count = dfumi.loc[i,'umi']
+                count = dfumi.loc[(dfumi['cell_barcode']==i) & (dfumi['gene'] == gene), 'umi'][0]
                 counts4genes.setdefault(gene, []).append(count)
-            except KeyError:
+            except (KeyError, IndexError) as e:
                 counts4genes.setdefault(gene, []).append(0)
     npgenes = np.array(list(counts4genes.values()))
     mat = mat.todense()
