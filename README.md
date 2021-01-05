@@ -8,6 +8,7 @@ scViralQuant is tested to work in python 3.6.8
 * argsparse
 * htseq
 * pandas 
+* scipy
 
 Currently only set to run on linux
 

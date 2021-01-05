@@ -13,7 +13,8 @@ setup(name="scViralQuant",
       install_requires=[
           'argparse',
           'htseq', 
-          'pandas'
+          'pandas',
+          'scipy'
       ],
       include_package_data=True,
       zip_safe=False,
