@@ -32,7 +32,6 @@ def parse_arguments():
     parser.add_argument("--tmp_removal", type=bool, required=False, default=True)
 
     return parser.parse_args()
-
 if __name__ == '__main__':
     args = parse_arguments()
     viable_cb=ex.extract_viable_10x(args.path10x)
