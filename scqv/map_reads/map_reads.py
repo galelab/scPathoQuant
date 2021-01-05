@@ -35,7 +35,7 @@ def map2viralgenome(args):
 
     # -- align reads 
     arg=[bowtie2path+"bowtie2", "-p", args.processors, "-q", os.path.join(args.output_path,"_tmp/unmapped.fq"), "-x", os.path.join(args.path2genome,"genome"), "-S", os.path.join(args.output_path, "virus_al.sam")]
-    ef._run_subprocesses(arg, "STATUS: Align reads ...", "aligning reads", verbose=True)
+    ef._run_subprocesses(arg, "STATUS: Align reads ...", "aligning reads")
     
     # --generate necessary output files
     arg=[samtoolspath+"samtools", "view", "-@", args.processors, "-F", "4", "-Sb", os.path.join(args.output_path,"virus_al.sam"), "-o", os.path.join(args.output_path, "virus_al.bam")]
