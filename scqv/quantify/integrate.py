@@ -50,7 +50,7 @@ def integrate_viralgenes_data_2_matrix(path10x, dfumi):
     for gene in uniqgenes:
         for i in barcodes:
             try:
-                count = dfumi.loc[(dfumi['cell_barcode']==i) & (dfumi['gene'] == gene), 'umi'][0]
+                count = dfumi.loc[(dfumi['cell_barcode']==i) & (dfumi['gene'] == gene), 'umi'].iloc[0]
                 counts4genes.setdefault(gene, []).append(count)
             except (KeyError, IndexError) as e:
                 counts4genes.setdefault(gene, []).append(0)
