@@ -50,7 +50,7 @@ def quantify_reads(output_path,filename):
 
 def htseq_run(args):
     ## -- generate gtf for viral genes
-    files_gtf = glob.glob(args.path2genome+"*.gtf")
+    files_gtf = glob.glob(os.path.join(args.path2genome, "*.gtf"))
     if len(files_gtf) > 1:
         print ("WARNING: too many gtf files in genome folder.")
         return False
@@ -58,7 +58,7 @@ def htseq_run(args):
         print ("STATUS: No gtf file not counting reads for individual viral genes")
         return False
     elif len(files_gtf) ==1:
-        arg=["htseq-count", "--format=bam", "--idattr=gene_id", os.path.join(args.output_path, "virus_al_sort.bam"),
+        arg=["htseq-count", "--format=bam",  "--intersection-nonempty", "--idattr=gene_id", os.path.join(args.output_path, "virus_al_sort.bam"),
             files_gtf[0], "--samout="+os.path.join(args.output_path,"virus_genes_al_sort_counts.sam")]
         ef._run_subprocesses(arg, "STATUS: running htseq for viral genes ", "running htseq for viral genes")
         dfumi = quantify_reads(args.output_path, os.path.join(args.output_path, "virus_genes_al_sort_counts.sam"))

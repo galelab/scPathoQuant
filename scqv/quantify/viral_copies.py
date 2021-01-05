@@ -27,7 +27,7 @@ def read_FASTA(filename):
     return prots
 
 def _generate_viral_gtf(args):
-    files_genome = glob.glob(args.path2genome+"*.fa")
+    files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
     if len(files_genome) > 1:
         print ("WARNING:  too many fasta files in genome folder.")
     
@@ -67,7 +67,8 @@ def htseq_run(args):
     ## -- generate gtf for viral copies
 
     gene_name = _generate_viral_gtf(args)
-    arg=["htseq-count", "--format=bam", "--idattr=gene_id", os.path.join(args.output_path, "virus_al_sort.bam"), os.path.join(args.output_path,"_tmp","viral_copy.gtf"), "--samout="+os.path.join(args.output_path,"virus_al_sort_counts.sam")]
+    arg=["htseq-count", "--format=bam", "--intersection-nonempty", "--idattr=gene_id", os.path.join(args.output_path, "virus_al_sort.bam"),
+         os.path.join(args.output_path,"_tmp","viral_copy.gtf"), "--samout="+os.path.join(args.output_path,"virus_al_sort_counts.sam")]
     ef._run_subprocesses(arg, "STATUS: running htseq for viral copies ", "running htseq for viral copies")
     dfumi = quantify_reads(args.output_path, os.path.join(args.output_path, "virus_al_sort_counts.sam"), gene_name)
     return dfumi, gene_name
