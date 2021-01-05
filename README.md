@@ -12,12 +12,13 @@ scViralQuant is tested to work in python 3.6.8
 Currently only set to run on linux
 
 ### Installation
-
+----------------
 ```bash
 python setup.py install
 ```
 
 ### Running scViralQuant 
+------------------------
 Set the following parameters 
  
 * -10x = Path/to/10x/sample
@@ -31,6 +32,7 @@ Example run:
 ```
 
 ### Output files 
+----------------
 Output files by scViralQuant
 
 * viral_copy.png - violin plot showing number of cells with virus
