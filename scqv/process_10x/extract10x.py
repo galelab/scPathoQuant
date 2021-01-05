@@ -10,7 +10,7 @@ def extract_viable_10x(path10x):
     print ("STATUS: pull out viable cells")
     barcodes=[]
     if os.path.isdir(path10x):
-        with gzip.open(path10x+'/outs/filtered_feature_bc_matrix/barcodes.tsv.gz', 'rb') as f:
+        with gzip.open(os.path.join(path10x, 'outs/filtered_feature_bc_matrix/barcodes.tsv.gz'), 'rb') as f:
             file_content = f.read().decode("UTF-8").split("\n")
             if file_content[-1] =='': 
                 del file_content[-1]

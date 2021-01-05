@@ -22,9 +22,9 @@ else:
 def map2viralgenome(args):
 
     # -- check if libraries are present if not generate 
-    files = glob.glob(args.path2genome+"/*.bt2")
+    files = glob.glob(os.path.join(args.path2genome,"*.bt2"))
     if len(files) == 0:
-        files_genome = glob.glob(args.path2genome+"*.fa")
+        files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
         if len(files_genome) > 1:
             print ("WARNING:  two fasta files in genome folder.")
         arg=[bowtie2path+"bowtie2-build", files_genome[0], os.path.join(args.path2genome, "genome")]
