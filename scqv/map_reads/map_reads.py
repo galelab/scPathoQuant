@@ -31,7 +31,7 @@ def map2viralgenome(args):
         ef._run_subprocesses(arg, "STATUS: generating libraries ...", "extracting unmapped")
 
     else:
-        print("STATUS: libraries have already been made for this genome")
+        print("STATUS: bowtie indexes have already been made for this genome")
 
     # -- align reads 
     arg=[bowtie2path+"bowtie2", "-p", args.processors, "-q", os.path.join(args.output_path,"_tmp/unmapped.fq"), "-x", os.path.join(args.path2genome,"genome"), "-S", os.path.join(args.output_path, "virus_al.sam")]
