@@ -58,6 +58,7 @@ def quantify_reads(output_path,filename, gene_name):
     df = pd.read_csv(os.path.join(output_path,"_tmp", "barcode_umi_read_table.csv"))
     df1 = df[df['read'].isin(reads_mapping)]
     df_reads = df1.groupby(['cell_barcode', 'umi']).count()
+    df_reads.to_csv(os.path.join(output_path, "virus_al_umi_read_counts.csv"))
     df_reads = df_reads.reset_index()
     df_umi = df_reads[["cell_barcode", "umi"]].groupby(["cell_barcode"]).count()
     df_umi.to_csv(os.path.join(output_path, "virus_al_counts.csv"))
