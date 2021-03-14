@@ -21,7 +21,7 @@ def parse_arguments():
     parser.add_argument("-op", "--output_path", default="output_scviralquant/")
     parser.add_argument("-p", "--processors", default=1)
     parser.add_argument("-p2genome", "--path2genome", type=str, required=True)
-    parser.add_argument("--tmp_removal", type=bool, required=False, default=True)
+    parser.add_argument("--tmp_removal", type=bool, required=False)
 
     return parser.parse_args()
 if __name__ == '__main__':
