@@ -37,19 +37,20 @@ def map2viralgenome(args):
     elif args.aligner == "bbmap":
         if os.path.isdir(os.path.join(args.path2genome, "ref")) is False:
             files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
-            bbmapgenomefile = files[0]
+            bbmapgenomefile = files_genome[0]
     else:
         raise ValueError(args.aligner+" not an available aligner specify bbmap or bowtie2")
 
     # -- align reads 
     if args.aligner == "bowtie2":
-        arg=[bowtie2path+"bowtie2", "-p", args.processors, "-q", os.path.join(args.output_path,"_tmp", "unmapped.fq"), "-x", os.path.join(args.path2genome,"genome"), "-S", os.path.join(args.output_path, "virus_al.sam")]
-        ef._run_subprocesses(arg, "STATUS: Align reads ...", "aligning reads")
+        arg=[bowtie2path+"bowtie2", "-p", args.processors, "-q", os.path.join(args.output_path,"_tmp", "unmapped.fq"), "--local", "-x", os.path.join(args.path2genome,"genome"), "-S", os.path.join(args.output_path, "virus_al.sam")]
+        ef._run_subprocesses(arg, "STATUS: Align reads bowtie2 ...", "aligning reads")
     elif arg.aligner == "bbmap":
         arg=[bbmap2path+"bbmap.sh", "ref="+bbmapgenomefile, "in="+os.path.join(args.output_path,"_tmp", "unmapped.fq"), "nodisk=t" ,"local=t",
             "covstats="+os.path.join(args.output_path, "constats.txt"), "covhist="+os.path.join(args.output_path,"covhist.txt"),
             "basecov=+"+os.path.join(args.output_path,"basecov.txt"), "bincov="++os.path.join(args.output_path, "bincov.txt"),
             "out="+os.path.join(args.output_path, "virus_al.sam")]
+        ef._run_subprocesses(arg, "STATUS: Align reads bbmap ...", "aligning reads")
 
     # --generate necessary output files
     arg=[samtoolspath+"samtools", "view", "-@", args.processors, "-F", "4", "-Sb", os.path.join(args.output_path,"virus_al.sam"), "-o", os.path.join(args.output_path, "virus_al.bam")]
