@@ -394,7 +394,7 @@ def send_email(email_to, email_subject, email_body, email_from = 'rqc@jgi-psf.or
     if log:
         log.info(msg)
     else:
-        print msg
+        print (msg)
 
     if err_flag == 1:
         return 0
@@ -637,7 +637,7 @@ def get_analysis_project_id(seq_proj_id, target_analysis_project_id, target_anal
     if log:
         log.info("- cmd: %s", cmd)
     else:
-        print "- cmd: %s" % cmd
+        print ("- cmd: %s" % cmd)
     std_out, std_err, exit_code = run_command(cmd, True)
 
     post_mortem_cmd(cmd, exit_code, std_out, std_err, log)
@@ -733,7 +733,7 @@ def dot_flow(flow_file, dot_file, log = None):
         if log:
             log.info("- cannot find flow file:  %s", flow_file)
         else:
-            print "Cannot find flow file: %s" % flow_file
+            print ("Cannot find flow file: %s" % flow_file)
         return
 
 
@@ -826,17 +826,17 @@ def flow_replace(my_str):
 if __name__ == "__main__":
     # unit tests
 
-    print human_size(102192203)
-    print human_size(250000000000)
+    print (human_size(102192203))
+    print (human_size(250000000000))
     #print get_read_count_fastq("/global/projectb/scratch/brycef/sag/phix/11185.1.195330.UNKNOWN_matched.fastq.gz")
 
     cmd = "#bbtools;bbduk.sh in=/global/dna/dm_archive/sdm/illumina//01/14/88/11488.1.208132.UNKNOWN.fastq.gz ref=/global/dna/shared/rqc/ref_databases/qaqc/databases/phix174_ill.ref.fa outm=/global/projectb/scratch/brycef/phix/11488/11488.1.208132.UNKNOWN_matched.fastq.gz outu=/global/projectb/scratch/brycef/phix/11488/11488.1.208132.UNKNOWN_unmatched.fastq.gz"
-    print convert_cmd(cmd)
+    print (convert_cmd(cmd))
     cmd = "#pigz;pigz /global/projectb/scratch/brycef/align/BTOYH/genome/11463.6.208000.CAAGGTC-AGACCTT.filter-RNA.fastq.gz-genome.sam"
-    print convert_cmd(cmd)
+    print (convert_cmd(cmd))
 
     cmd = "#java;java -version"
-    print convert_cmd(cmd)
+    print (convert_cmd(cmd))
 
     dot_flow("/global/projectb/scratch/brycef/pbmid/BWOAU/f2.flow", "/global/projectb/scratch/brycef/pbmid/BWOAU/BWOUAx.dot")
 

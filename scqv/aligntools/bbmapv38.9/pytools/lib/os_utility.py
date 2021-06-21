@@ -422,7 +422,7 @@ class TestOsUtility(unittest.TestCase):
         cmd = "free"
         try:
             freeOut = back_ticks(cmd, shell=True)
-        except CalledProcessError, msg:
+        except (CalledProcessError, msg):
             print >>sys.stderr, "Failed to call %s. Exit code=%s" % (msg.cmd, msg.returncode)
             sys.exit(1)
 
