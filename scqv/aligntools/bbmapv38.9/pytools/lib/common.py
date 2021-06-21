@@ -340,7 +340,7 @@ def convert_cmd(cmd):
                         new_cmd = new_cmd.replace(mod, genepool_mod[mod])
 
     if new_cmd.startswith("#"):
-        print "Command not found!  %s" % new_cmd
+        print ("Command not found!  %s" % new_cmd)
         sys.exit(18)
 
     #print new_cmd

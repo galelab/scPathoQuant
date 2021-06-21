@@ -407,15 +407,15 @@ class TestOsUtility(unittest.TestCase):
     def testRun(self):
         try:
             run(["rm", "-rf", "./unittest"], dryRun=False)
-        except CalledProcessError, msg:
+        except (CalledProcessError, msg):
             self.assertNotEqual(msg.returncode, 0)
         try:
             make_dir("./unittest", dryRun=False)
-        except CalledProcessError, msg:
+        except (CalledProcessError, msg):
             self.assertEqual(msg.returncode, 0)
         try:
             rm_dir("./unittest", dryRun=False)
-        except CalledProcessError, msg:
+        except (CalledProcessError, msg):
             self.assertEqual(msg.returncode, 0)
 
     def testBackTicks(self):
