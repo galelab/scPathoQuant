@@ -64,13 +64,13 @@ def map2viralgenome(args):
             ef._run_subprocesses(arg, "STATUS: Align reads bbmap global...", "aligning reads")
 
     # --generate necessary output files
-    arg=[samtoolspath+"samtools", "view", "-@", args.processors, "-F", "4", "-Sb", os.path.join(args.output_path,"virus_al.sam"), "-o", os.path.join(args.output_path, "virus_al.bam")]
+    arg=[os.path.join(samtoolspath, "samtools"), "view", "-@", args.processors, "-F", "4", "-Sb", os.path.join(args.output_path,"virus_al.sam"), "-o", os.path.join(args.output_path, "virus_al.bam")]
     ef._run_subprocesses(arg, "STATUS: Extracting mapped reads and converting to bam", "extracting mapped reads and converting to bam")
 
-    arg=[samtoolspath+"samtools", "sort", os.path.join(args.output_path,"virus_al.bam"), "-o", os.path.join(args.output_path,"virus_al_sort.bam")]
+    arg=[os.path.join(samtoolspath, "samtools"), "sort", os.path.join(args.output_path,"virus_al.bam"), "-o", os.path.join(args.output_path,"virus_al_sort.bam")]
     ef._run_subprocesses(arg, "STATUS: Sorting bam", "sorting bam")
 
-    arg=[samtoolspath+"samtools", "index", os.path.join(args.output_path,"virus_al_sort.bam"), os.path.join(args.output_path,"virus_al_sort.bam.bai")]
+    arg=[os.path.join(samtoolspath, "samtools"), "index", os.path.join(args.output_path,"virus_al_sort.bam"), os.path.join(args.output_path,"virus_al_sort.bam.bai")]
     ef._run_subprocesses(arg, "STATUS: generating bam index", "generating bam index")
 
 

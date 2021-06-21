@@ -10,10 +10,10 @@ from sys import platform
 PATH = os.path.dirname(os.path.abspath(__file__))
 PATH = re.sub("map_reads", "", PATH)
 if platform == "linux":
-    bowtie2path = os.path.join(PATH, "aligntools/bowtie2-2.4.2-linux-x86_64/")
-    samtoolspath = os.path.join(PATH, "extra_tools/samtoolsv1.11_linux/bin/")
+    bowtie2path = os.path.join(PATH, "aligntools", "bowtie2-2.4.2-linux-x86_64")
+    samtoolspath = os.path.join(PATH, "extra_tools", "samtoolsv1.11_linux","bin")
 elif platform == "OS":
-    bowtie2path = os.path.join(PATH, "aligntools/bowtie2-2.4.2-macos-x86_64/")
+    bowtie2path = os.path.join(PATH, "aligntools","bowtie2-2.4.2-macos-x86_64")
 else:
     ValueError("Program wont run on this operating system "+platform)
 
@@ -34,7 +34,7 @@ def process_unmapped_reads(args, viable_cb):
     except:
         pass
     # -- pull out unmapped reads
-    arg=[samtoolspath+"samtools", "view", "-@", args.processors,
+    arg=[ os.path.join(samtoolspath, "samtools"), "view", "-@", args.processors,
         "-b", "-h", "-f", "4", os.path.join(args.path10x, "outs", "possorted_genome_bam.bam"),
         "-o",  os.path.join(args.output_path, "_tmp","unmapped.bam")]
     process = subprocess.Popen(arg, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
@@ -43,7 +43,7 @@ def process_unmapped_reads(args, viable_cb):
     _check_subprocess_run(process.returncode, stderrdata, "extracting unmapped")
     
     # -- convert unmapped bam to sam file
-    arg=[samtoolspath+"samtools","view", "-@", args.processors, 
+    arg=[ os.path.join(samtoolspath, "samtools"),"view", "-@", args.processors, 
         "-h", os.path.join(args.output_path,"_tmp", "unmapped.bam"),
         "-o", os.path.join(args.output_path, "_tmp", "unmapped.sam")]
     process = subprocess.Popen(arg, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
@@ -73,7 +73,7 @@ def process_unmapped_reads(args, viable_cb):
                         fout.write(re.sub("CB:Z:", "", cellbarcode)+","+re.sub("UB:Z:", "", umi)+","+larray[0]+"\n")
 
     # -- convert to fastq file
-    arg = [samtoolspath+"samtools", "bam2fq", "-@", args.processors, "-n","-O", "-s", os.path.join(args.output_path, "_tmp", "unmapped.fq"), os.path.join(args.output_path,"_tmp","unmapped.bam")]
+    arg = [os.path.join(samtoolspath, "samtools"), "bam2fq", "-@", args.processors, "-n","-O", "-s", os.path.join(args.output_path, "_tmp", "unmapped.fq"), os.path.join(args.output_path,"_tmp","unmapped.bam")]
     f = open(os.path.join(args.output_path, "_tmp", "unmapped.fq"), "w") 
     process = subprocess.Popen(arg, stdout=f, stderr=subprocess.PIPE)
     stdoutdata, stderrdata = process.communicate()
