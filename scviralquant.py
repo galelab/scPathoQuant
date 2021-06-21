@@ -18,7 +18,7 @@ from scqv.visualization import viz
 def parse_arguments():
     parser = argparse.ArgumentParser(prog="scViralQuant", description="Quantify sc viral mapping reads")
     parser.add_argument("-10x", "--path10x", type=str, required=True)
-    parser.add_argument("-op", "--output_path", default="output_scviralquant/")
+    parser.add_argument("-op", "--output_path", default="output_scviralquant")
     parser.add_argument("-p", "--processors", default=1)
     parser.add_argument("-p2genome", "--path2genome", type=str, required=True)
     parser.add_argument("-align", "--aligner", type=str, required=True, default="bowtie2")
