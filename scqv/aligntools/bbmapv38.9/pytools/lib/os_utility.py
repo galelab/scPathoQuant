@@ -55,7 +55,7 @@ def run(*popenargs, **kwargs):
     dryRun = kw.pop('dryRun', False)
 
     if dryRun:
-        print popenargs
+        print (popenargs)
     else:
         ## convert something like run("ls -l") into run("ls -l", shell=True)
         if isinstance(popenargs[0], str) and len(shlex.split(popenargs[0])) > 1:
@@ -90,7 +90,7 @@ def back_ticks(*popenargs, **kwargs):
     dryRet = kw.pop('dryRet', None)
 
     if dryRun:
-        print popenargs
+        print (popenargs)
         return dryRet
     else:
         kw['stdout'] = PIPE
@@ -191,7 +191,7 @@ def make_dir(path, perm=None, dryRun=False):
             else:
                 os.makedirs(path, perm)
     else:
-        print "make_dir %s" % (path, )
+        print ("make_dir %s" % (path, ))
 
 """
 The method make_dir_p() is recursive directory creation function.
@@ -341,7 +341,7 @@ def _VmB(VmKey, pid):
             return 0.0
     except OSError:
         #logger.exception("Failed to open /proc files.")
-        print "Failed to open /proc files."
+        print ("Failed to open /proc files.")
         return 0.0 # non-Linux?
 
     ## get VmKey line e.g. 'VmRSS: 9999 kB\n ...'

@@ -199,21 +199,21 @@ def post_mortem_cmd(cmd, exit_code, std_out, std_err, log = None):
             log.error("- exit code: %s", exit_code)
 
         else:
-            print "- cmd failed: %s" % (cmd)
-            print "- exit code: %s" % (exit_code)
+            print ("- cmd failed: %s" % (cmd))
+            print ("- exit code: %s" % (exit_code))
 
 
         if std_out:
             if log:
                 log.error("- std_out: %s", std_out)
             else:
-                print "- std_out: %s" % (std_out)
+                print ("- std_out: %s" % (std_out))
 
         if std_err:
             if log:
                 log.error("- std_err: %s", std_err)
             else:
-                print "- std_err: %s" % (std_err)
+                print ("- std_err: %s" % (std_err))
 
 
 '''

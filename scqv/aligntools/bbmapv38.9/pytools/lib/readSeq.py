@@ -153,5 +153,5 @@ if __name__ == '__main__':
     for inputfile in sys.argv[1:]:
         #get a pair of reads
         for r1, r2 in readSeq(inputfile, paired=True):
-            print r1.header
-            print r2.header
+            print (r1.header)
+            print (r2.header)

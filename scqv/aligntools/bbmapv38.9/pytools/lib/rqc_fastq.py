@@ -23,7 +23,7 @@ These are functions for fastq file analysis
 def _err_return(msg, log=None):
     if log:
         log.error(msg)
-    print msg
+    print (msg)
     return None
 
 
