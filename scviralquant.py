@@ -23,6 +23,7 @@ def parse_arguments():
     parser.add_argument("-p2genome", "--path2genome", type=str, required=True)
     parser.add_argument("-align", "--aligner", type=str, required=True, default="bowtie2")
     parser.add_argument("-aligntype", "--alignment_type", type=str, default="local")
+    parser.add_argument("-overwrite", "--overwrite_feature_matrix", type=bool, required=False)
     parser.add_argument("--tmp_removal", type=bool, required=False)
 
     return parser.parse_args()
@@ -33,10 +34,10 @@ if __name__ == '__main__':
     mr.map2viralgenome(args)
     dfvc, gene_name = vc.htseq_run(args)
     viz.generate_viral_copy_plots(args, gene_name, dfvc)
-    integrate.integrate_data_2_matrix(args.path10x, dfvc, gene_name)
+    integrate.integrate_data_2_matrix(args, dfvc, gene_name)
     dfgenes = vg.htseq_run(args)
     if dfgenes is not False:
         viz.generate_viral_gene_plots(args, dfgenes)
-        integrate.integrate_viralgenes_data_2_matrix(args.path10x, dfgenes)
+        integrate.integrate_viralgenes_data_2_matrix(args, dfgenes)
     if args.tmp_removal:
         shutil.rmtree(os.path.join(args.output_path,"_tmp"))

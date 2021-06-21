@@ -606,7 +606,7 @@ def create_shell(shName, cmdArray):
         #fh.write("module unload blast+; module load blast+\n")
         for item in cmdArray:
             fh.write("%s\n" % item)
-        os.chmod(shName, 0755)  #-rwxr-xr-x
+        os.chmod(shName, 755)  #-rwxr-xr-x
 
 
 ## checkpoint logging
@@ -844,7 +844,7 @@ if __name__ == "__main__":
     ## initialize my logger
     logFile = os.path.join(outputPath, "rqc_filter_pipeline.log")
 
-    print "Started filtering pipeline with %s, writing log to: %s" % (SCRIPT_NAME, logFile)
+    print ("Started filtering pipeline with %s, writing log to: %s" % (SCRIPT_NAME, logFile))
 
     log = get_logger("filter", logFile, logLevel, print_log, True)
 
@@ -965,7 +965,7 @@ if __name__ == "__main__":
             if lastFastq is not None and lastFastq != -1:
                 lastFastq, status = post_process(fastq, outputPath, lastFastq, status, log)
             else:
-                print "Failed @ rqcfilter"
+                print ("Failed @ rqcfilter")
 
 
             ##--------------------------------
@@ -994,14 +994,14 @@ if __name__ == "__main__":
                 cycle = cycleMax + 1
 
             else:
-                print "Failed @ postprocess"
+                print ("Failed @ postprocess")
 
         else:
             cycle = cycleMax + 1
             log_and_print("Pipeline already completed")
 
 
-    print "Done."
+    print ("Done.")
     sys.exit(0)
 
 

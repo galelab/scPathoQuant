@@ -66,6 +66,9 @@ def map2viralgenome(args):
     arg=[os.path.join(samtoolspath, "samtools"), "view", "-@", args.processors, "-F", "4", "-Sb", os.path.join(args.output_path,"virus_al.sam"), "-o", os.path.join(args.output_path, "virus_al.bam")]
     ef._run_subprocesses(arg, "STATUS: Extracting mapped reads and converting to bam", "extracting mapped reads and converting to bam")
 
+    arg=[os.path.join(samtoolspath, "samtools"), "view", "-@", args.processors, "-h", os.path.join(args.output_path, "virus_al.bam"), "-o", os.path.join(args.output_path, "virus_al_mapped.sam")]
+    ef._run_subprocesses(arg, "STATUS: Converting mapped reads to from bam to sam file", "Converting mapped reads to from bam to sam file")
+
     arg=[os.path.join(samtoolspath, "samtools"), "sort", os.path.join(args.output_path,"virus_al.bam"), "-o", os.path.join(args.output_path,"virus_al_sort.bam")]
     ef._run_subprocesses(arg, "STATUS: Sorting bam", "sorting bam")
 
