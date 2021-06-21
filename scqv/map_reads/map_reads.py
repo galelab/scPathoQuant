@@ -35,9 +35,8 @@ def map2viralgenome(args):
         else:
             print("STATUS: bowtie2 indexes have already been made for this genome")
     elif args.aligner == "bbmap":
-        if os.path.isdir(os.path.join(args.path2genome, "ref")) is False:
-            files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
-            bbmapgenomefile = files_genome[0]
+        files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
+        bbmapgenomefile = files_genome[0]
     else:
         raise ValueError(args.aligner+" not an available aligner specify bbmap or bowtie2")
 
@@ -46,7 +45,7 @@ def map2viralgenome(args):
         if args.aligner == "bowtie2":
             arg=[os.path.join(bowtie2path, "bowtie2"), "-p", args.processors, "-q", os.path.join(args.output_path,"_tmp", "unmapped.fq"), "--local", "-x", os.path.join(args.path2genome,"genome"), "-S", os.path.join(args.output_path, "virus_al.sam")]
             ef._run_subprocesses(arg, "STATUS: Align reads bowtie2 local...", "aligning reads")
-        elif arg.aligner == "bbmap":
+        elif args.aligner == "bbmap":
             arg=[os.path.join(bbmap2path, "bbmap.sh"), "ref="+bbmapgenomefile, "in="+os.path.join(args.output_path,"_tmp", "unmapped.fq"), "nodisk=t" ,"local=t",
                 "covstats="+os.path.join(args.output_path, "constats.txt"), "covhist="+os.path.join(args.output_path,"covhist.txt"),
                 "basecov=+"+os.path.join(args.output_path,"basecov.txt"), "bincov="+os.path.join(args.output_path, "bincov.txt"),
