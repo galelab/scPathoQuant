@@ -14,7 +14,8 @@ setup(name="scViralQuant",
           'argparse',
           'htseq', 
           'pandas',
-          'scipy'
+          'scipy', 
+          'seaborn'
       ],
       include_package_data=True,
       zip_safe=False,
