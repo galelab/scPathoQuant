@@ -26,10 +26,11 @@ Set the following parameters
 * -op = path/for/results 
 * -p = number of processors (defualt = 1)
 * -p2genome = path/to/viral/fastafilefolder - in this folder should be at most 2 files 1) the fasta file with the viral genome sequence and 2) viral gtf file.  Once bowtie2 indexes are made folder can be reused with out having to remake bowtie indexes.  Note: In the fasta file the header will be used to quantify the number of viral copies, it is recommended that if the fasta header is a complicated name it be simplified (i.e. > HIV_virus)
+* -overwrite = will overwrite the files directly in the 10x filtered_feature_bc_matrix folder.  If not specified a copy of this folder will be made and then information about viral count information will be added to the files in this copied folder 
 
 Example run:
 ```bash 
- scviralquant -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder
+ scviralquant -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder -overwrite
 ```
 
 ### Output files 
@@ -40,8 +41,8 @@ Output files by scViralQuant
 * viral_genes.png - violin plot showing cells with viral gene expression 
 * virus_al_counts.csv - total number of reads mapping to the virus in each cell 
 * virus_al_gene_counts.csv - number of reads mapping to viral genes in each cell 
-* virus_al.bam - reads mapped to virus
-* virus_al.bam - reads mapped to virus (SAM)
+* virus_al.bam - reads mapped to virus (no unmapped reads)
+* virus_al_mapped.sam - reads mapped to only virus (no unmapped reads)
 * virus_al_sort.bam - sorted reads mapped to virus 
 * virus_al_sort.bam.bai - index file to virus_al_sort.bam
 * virus_al_sort_counts.sam - htseq output reads mapping to virus
