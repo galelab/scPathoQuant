@@ -19,8 +19,13 @@ def integrate_data_2_matrix(args, dfumi, gene_name):
         filter_folder="filtered_feature_bc_matrix"
     else:
         filter_folder="filtered_feature_bc_matrix_"+args.aligner+"_"+args.alignment_type
-        # if os.path.isdir(os.path.join(path10x, filter_folder)) is False:
-        shutil.copytree(os.path.join(path10x, "outs", "filtered_feature_bc_matrix"), os.path.join(path10x, "outs", filter_folder), copy_function = shutil.copy)
+        if os.path.isdir(os.path.join(path10x, filter_folder)) is False:
+            shutil.copytree(os.path.join(path10x, "outs", "filtered_feature_bc_matrix"), os.path.join(path10x, "outs", filter_folder), copy_function = shutil.copy)
+        else:
+            print("WARNING: folder exists so removing and recopying original")
+            shutil.rmtree(os.path.join(path10x, "outs", filter_folder))
+            shutil.copytree(os.path.join(path10x, "outs", "filtered_feature_bc_matrix"), os.path.join(path10x, "outs", filter_folder), copy_function = shutil.copy)
+
     print ("STATUS: Integrating viral copy counts into 10x matrix and feature files")
     mat = scipy.io.mmread(os.path.join(path10x,"outs", filter_folder, "matrix.mtx.gz"))
     gene_names = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs", filter_folder, "features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
