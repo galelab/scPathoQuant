@@ -31,5 +31,5 @@ def variantcaller(args):
     arg=[os.path.join(bcftoolspath, "bcftools"), "view",  os.path.join(args.output_path,"virus.bcf"), "-o", os.path.join(args.output_path,"virus_var.bcf")]
     ef._run_subprocesses(arg, "STATUS: Calling snps", "calling snps")
 
-    arg=[os.path.join(bcftoolspath, "bcftools"), "view",  os.path.join(args.output_path,"virus_var.bcf"), "|", os.path.join(vcfutilspath, "vcfutils.pl") "varFilter", "-d", 2, ">"  os.path.join(args.output_path,"virus_var_final.vcf")]
+    arg=[os.path.join(bcftoolspath, "bcftools"), "view",  os.path.join(args.output_path,"virus_var.bcf"), "|", os.path.join(vcfutilspath, "vcfutils.pl"), "varFilter", "-d", 2, ">",  os.path.join(args.output_path,"virus_var_final.vcf")]
     ef._run_subprocesses(arg, "STATUS: Converting to vcf", "converting to vcf")
