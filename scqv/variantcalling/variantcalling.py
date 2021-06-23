@@ -19,6 +19,7 @@ if platform == "linux":
 
 
 def variantcaller(args):
+    '''Runs samtools/bcftools to call variants in the virus genome'''
     files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
     genomefile = files_genome[0]
 
