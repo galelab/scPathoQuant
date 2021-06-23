@@ -12,8 +12,8 @@ from scqv.process_10x import extract10x as ex
 from scqv.quantify import viral_copies as vc
 from scqv.quantify import viral_genes as vg
 from scqv.quantify import integrate
-from scqv.visualization import viz 
-from scqv.variantcalling import variantcaller as vc
+from scqv.visualization import viz
+from scqv.variantcalling import variantcalling as vc
 
 
 def parse_arguments():
