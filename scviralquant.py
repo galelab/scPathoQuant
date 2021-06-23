@@ -13,7 +13,7 @@ from scqv.quantify import viral_copies as vc
 from scqv.quantify import viral_genes as vg
 from scqv.quantify import integrate
 from scqv.visualization import viz 
-from scqv.variantcalling import vc
+from scqv.variantcalling import variantcaller as vc
 
 
 def parse_arguments():
