@@ -13,6 +13,7 @@ from scqv.quantify import viral_copies as vc
 from scqv.quantify import viral_genes as vg
 from scqv.quantify import integrate
 from scqv.visualization import viz 
+from scqv.variantcalling import vc
 
 
 def parse_arguments():
@@ -25,8 +26,9 @@ def parse_arguments():
     parser.add_argument("-aligntype", "--alignment_type", type=str, default="local")
     parser.add_argument("-overwrite", "--overwrite_feature_matrix", type=bool, required=False)
     parser.add_argument("--tmp_removal", type=bool, required=False)
-
+    parser.add_argument("--variant_caller", type=bool, required=False)
     return parser.parse_args()
+
 if __name__ == '__main__':
     args = parse_arguments()
     viable_cb = ex.extract_viable_10x(args.path10x)
@@ -39,5 +41,7 @@ if __name__ == '__main__':
     if dfgenes is not False:
         viz.generate_viral_gene_plots(args, dfgenes)
         integrate.integrate_viralgenes_data_2_matrix(args, dfgenes)
+    if args.variant_caller:
+        vc.variantcaller(args)
     if args.tmp_removal:
         shutil.rmtree(os.path.join(args.output_path,"_tmp"))
