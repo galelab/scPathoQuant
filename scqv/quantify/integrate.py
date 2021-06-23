@@ -19,7 +19,7 @@ def integrate_data_2_matrix(args, dfumi, gene_name):
         filter_folder="filtered_feature_bc_matrix"
     else:
         filter_folder="filtered_feature_bc_matrix_"+args.aligner+"_"+args.alignment_type
-        if os.path.isdir(os.path.join(path10x, filter_folder)) is False:
+        if os.path.isdir(os.path.join(path10x, "outs", filter_folder)) is False:
             shutil.copytree(os.path.join(path10x, "outs", "filtered_feature_bc_matrix"), os.path.join(path10x, "outs", filter_folder), copy_function = shutil.copy)
         else:
             print("WARNING: folder exists so removing and recopying original")
@@ -59,7 +59,7 @@ def integrate_viralgenes_data_2_matrix(args, dfumi):
         filter_folder="filtered_feature_bc_matrix"
     else:
         filter_folder="filtered_feature_bc_matrix_"+args.aligner+"_"+args.alignment_type
-        if os.path.isdir(os.path.join(path10x, filter_folder)) is False:
+        if os.path.isdir(os.path.join(path10x, "outs", filter_folder)) is False:
            shutil.copytree(os.path.join(path10x, "outs", "filtered_feature_bc_matrix"), os.path.join(path10x,  "outs", filter_folder), copy_function = shutil.copy)
     print ("STATUS: Integrating viral gene counts into 10x matrix and feature files")
     mat = scipy.io.mmread(os.path.join(path10x,"outs",filter_folder,"matrix.mtx.gz"))
