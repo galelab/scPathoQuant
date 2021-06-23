@@ -24,9 +24,9 @@ def parse_arguments():
     parser.add_argument("-p2genome", "--path2genome", type=str, required=True)
     parser.add_argument("-align", "--aligner", type=str, required=True, default="bowtie2")
     parser.add_argument("-aligntype", "--alignment_type", type=str, default="local")
-    parser.add_argument("-overwrite", "--overwrite_feature_matrix", type=bool, required=False)
-    parser.add_argument("--tmp_removal", type=bool, required=False)
-    parser.add_argument("-vc", "--variantcaller", type=bool, required=False)
+    parser.add_argument("-overwrite", "--overwrite_feature_matrix", type=bool, required=False, action="store_true")
+    parser.add_argument("--tmp_removal", type=bool, required=False, action="store_true")
+    parser.add_argument("-vc", "--variantcaller", type=bool, required=False, action="store_true")
     return parser.parse_args()
 
 if __name__ == '__main__':
