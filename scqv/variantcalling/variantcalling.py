@@ -20,12 +20,30 @@ if platform == "linux":
     vcfutilspath =  os.path.join(PATH, "extra_tools", "vcfutils", "bin")
 
 
-def variantcaller(args):
+def variantcaller(args, dfgenes):
     '''Runs samtools/bcftools to call variants in the virus genome'''
     files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
     genomefile = files_genome[0]
     header = open(genomefile, 'r').readline()
     header = re.sub(">", "", header).strip()
+
+    if dfgenes is not False:
+        gtf_coord = {}
+        files_gtf = glob.glob(os.path.join(args.path2genome, "*.gtf"))
+        with open(files_gtf[0]) as fin:
+            for line in fin:
+                if line.startswith("#"):
+                    pass
+                else:
+                    larray = line.strip().split("\t")
+                    if larray[2] == "gene":
+                        tmp = larray[8].split(";")
+                        for i in tmp:
+                            if i.startswith("gene_name"):
+                                gene = re.sub("gene_name ", "", i)
+                                gene = re.sub("\"", "", gene)
+                    for i in range(larray[3], larray[4]+1):
+                        gtf_coord[i]=gene
 
     # arg=[os.path.join(samtoolspath, "samtools"), "faidx", genomefile, "-o", genomefile+".fai"]
     # ef._run_subprocesses(arg, "STATUS: indexing genome file", "indexing genome file")
@@ -59,14 +77,22 @@ def variantcaller(args):
     try:
         os.mkdir(os.path.join(args.output_path, "_tmp", "_variant_tmp"))
     except:
-        print("WARNING: variant tmp folder already exists")
+        # print("WARNING: variant tmp folder already exists")
+        pass
+
+    try:
+        os.mkdir(os.path.join(args.output_path, "variant_calling_results"))
+    except:
+        pass 
 
     print("STATUS: Extract reads with variant  ...")
-    outputfile = open(os.path.join(args.output_path, "cellvariantcalls.txt"), 'w')
+    outputfile = open(os.path.join(args.output_path, "variant_calling_results", "cellvariantcallstotal.txt"), 'w')
     outputfile.write("cell_barcode\tvariantinfo(variant_ref_base)\tpercentageofumi\tweight(virus umi count in cell/max virus umi count)\tweightedpercentage\tbase\n")
     for base in tqdm(variants):
         st.sam2tsv_function(os.path.join(args.output_path, "virus_al_sort.bam"), genomefile, int(base), outputfile=os.path.join(args.output_path, "_tmp", "_variant_tmp", "variant_"+str(base)+"_reads.txt"))
         # print("STATUS: Pull out variant information for "+base)
+        outputfile1 = open(os.path.join(args.output_path, "variant_calling_results",  "cellvariantcalls_"+str(base)+".txt"), 'w')
+        outputfile1.write("cell_barcode\tvariantinfo(variant_ref_base)\tpercentageofumi\tweight(virus umi count in cell/max virus umi count)\tweightedpercentage\tbase\n")
         dftmp = pd.read_table(os.path.join(args.output_path, "_tmp", "_variant_tmp", "variant_"+str(base)+"_reads.txt"), header=None)
         reads_tmp = set(reads).intersection(set(dftmp[0].to_list()))
         dftmpreads = dftmp[dftmp[0].isin(reads_tmp)]
@@ -84,8 +110,20 @@ def variantcaller(args):
                     per = round(dfcbase.loc[i, vari]['umi']/dfcsum.loc[i]['umi'], 2)*100
                     depthweight = dfvirus.loc[i, "umi"]/maxdepth
                     weightedper = per*depthweight
-                    outputfile.write(i+"\t"+vari+"_"+variants_ref[str(base)]+"_"+str(base)+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
+                    if dfgenes is False:
+                        outputfile.write(i+"\t"+vari+"_"+variants_ref[str(base)]+"_"+str(base)+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
+                        outputfile1.write(i+"\t"+vari+"_"+variants_ref[str(base)]+"_"+str(base)+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
+                    else:
+                        try:
+                            gene_variant=gtf_coord[str(base)]
+                            outputfile.write(i+"\t"+vari+"_"+variants_ref[str(base)]+"_"+str(base)+"_"+gene_variant+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
+                            outputfile1.write(i+"\t"+vari+"_"+variants_ref[str(base)]+"_"+str(base)+"_"+gene_variant+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
+                        except KeyError:
+                            gene_variant="OCR"
+                            outputfile.write(i+"\t"+vari+"_"+variants_ref[str(base)]+"_"+str(base)+"_"+gene_variant+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
+                            outputfile1.write(i+"\t"+vari+"_"+variants_ref[str(base)]+"_"+str(base)+"_"+gene_variant+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
                 except KeyError:
                     pass
                     # print("WARNING: No variant "+vari+" in cell "+i)
+        outputfile1.close()
     outputfile.close()
