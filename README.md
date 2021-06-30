@@ -27,7 +27,7 @@ Set the following parameters
 * -p = number of processors (defualt = 1)
 * -p2genome = path/to/viral/fastafilefolder - in this folder should be at most 2 files 1) the fasta file with the viral genome sequence and 2) viral gtf file.  Once bowtie2 indexes are made folder can be reused with out having to remake bowtie indexes.  Note: In the fasta file the header will be used to quantify the number of viral copies, it is recommended that if the fasta header is a complicated name it be simplified (i.e. > HIV_virus)
 * -overwrite = will overwrite the files directly in the 10x filtered_feature_bc_matrix folder.  If not specified a copy of this folder will be made and then information about viral count information will be added to the files in this copied folder 
-
+* -vc (--variantcaller) = will using BCFtools call variants in the viral genome
 Example run:
 ```bash 
  scviralquant -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder -overwrite
@@ -48,3 +48,15 @@ Output files by scViralQuant
 * virus_al_sort_counts.sam - htseq output reads mapping to virus
 * virus_genes_al_sort_counts.sam - htseq output reads mapping to individual virus genes (will not be produced if viral gtf is not provided)
 * Overwrites original 10x data provided to include viral counts and viral gene counts (if gtf file is provided)
+* virus.bcf - bcf format of variantn calls
+* virus_calls.vcf - variant calls by BCFtools
+* variant_calling_results/ - contains results for which cells support the variant calls 
+
+### Running scViralQuant variantcalling module
+----------------------------------------------
+The variant calling module will use BCFtools to call variants in the viral genome in the single cell sample.  Then a percentage of reads supporting the variant call that map to the variant position in each cell will be calculated.  Additionally a weighted percentage adjusting for total number of reads mapping to the virus will be calculated and put in to the output folder under a subfolder called variant_calling_results/.  This can then be information can be integrated into a seurat object for visualization using https://github.com/lwhitmore/RscViralQuantIntegrate.
+
+Example run:
+```bash 
+ scviralquant -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder -overwrite --variantcaller
+```
