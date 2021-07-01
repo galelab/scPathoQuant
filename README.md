@@ -26,7 +26,7 @@ Set the following parameters
 * -10x = Path/to/10x/sample
 * -op = path/for/results 
 * -p = number of processors (defualt = 1)
-* -p2genome = path/to/viral/fastafilefolder - in this folder should be at most 2 files 1) the fasta file with the viral genome sequence and 2) viral gtf file.  Once bowtie2 indexes are made folder can be reused with out having to remake bowtie indexes.  Note: In the fasta file the header will be used to quantify the number of viral copies, it is recommended that if the fasta header is a complicated name it be simplified (i.e. > HIV_virus)
+* -p2genome = path/to/viral/fastafilefolder - in this folder should be at most 2 files 1) the fasta file with the viral genome sequence and 2) viral gtf file (not mandatory this can just run with fasta file with the viral genome).  Once bowtie2 indexes are made folder can be reused with out having to remake bowtie indexes.  Note: In the fasta file the header will be used to quantify the number of viral copies, it is recommended that if the fasta header is a complicated name it be simplified (i.e. > HIV_virus)
 * -overwrite = will overwrite the files directly in the 10x filtered_feature_bc_matrix folder.  If not specified a copy of this folder will be made and then information about viral count information will be added to the files in this copied folder 
 * -vc (--variantcaller) = will using BCFtools call variants in the viral genome
 Example run:
@@ -51,7 +51,7 @@ Output files by scViralQuant
 * Overwrites original 10x data provided to include viral counts and viral gene counts (if gtf file is provided)
 * virus.bcf - bcf format of variantn calls
 * virus_calls.vcf - variant calls by BCFtools
-* variant_calling_results/ - contains results for which cells support the variant calls 
+* variant_calling_results/ - contains results for which cells support the variant calls (if the viral gtf is provided then output will provide information about where the snp is falling, in the coding region of a gene or outside coding region (OCR))
 
 ### Running scViralQuant variantcalling module
 ----------------------------------------------
