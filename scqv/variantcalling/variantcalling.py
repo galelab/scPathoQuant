@@ -43,16 +43,16 @@ def variantcaller(args, dfgenes):
                                 gene = re.sub("gene_name ", "", i)
                                 gene = re.sub("\"", "", gene)
                     for i in range(larray[3], larray[4]+1):
-                        gtf_coord[i]=gene
+                        gtf_coord.setdefault(i, []).append(gene)
 
-    # arg=[os.path.join(samtoolspath, "samtools"), "faidx", genomefile, "-o", genomefile+".fai"]
-    # ef._run_subprocesses(arg, "STATUS: indexing genome file", "indexing genome file")
+    arg=[os.path.join(samtoolspath, "samtools"), "faidx", genomefile, "-o", genomefile+".fai"]
+    ef._run_subprocesses(arg, "STATUS: indexing genome file", "indexing genome file")
 
-    # arg=[os.path.join(bcftoolspath, "bcftools"), "mpileup", "--threads", args.processors, "-Q", "20", "-d", "250000000", "-L", "250000000", "-f", genomefile, os.path.join(args.output_path,"virus_al_sort.bam"), "-o", os.path.join(args.output_path,"virus.bcf")]
-    # ef._run_subprocesses(arg, "STATUS: Running bcftools mpileup", "running bcftools mpileup")
+    arg=[os.path.join(bcftoolspath, "bcftools"), "mpileup", "--threads", args.processors, "-Q", "20", "-d", "250000000", "-L", "250000000", "-f", genomefile, os.path.join(args.output_path,"virus_al_sort.bam"), "-o", os.path.join(args.output_path,"virus.bcf")]
+    ef._run_subprocesses(arg, "STATUS: Running bcftools mpileup", "running bcftools mpileup")
 
-    # arg=[os.path.join(bcftoolspath, "bcftools"), "call", "-v", "-c", os.path.join(args.output_path,"virus.bcf"), "-o", os.path.join(args.output_path,"virus_calls.vcf")]
-    # ef._run_subprocesses(arg, "STATUS: Calling snps", "calling snps")
+    arg=[os.path.join(bcftoolspath, "bcftools"), "call", "-v", "-c", os.path.join(args.output_path,"virus.bcf"), "-o", os.path.join(args.output_path,"virus_calls.vcf")]
+    ef._run_subprocesses(arg, "STATUS: Calling snps", "calling snps")
 
     variants = {}
     variants_ref = {}
@@ -115,7 +115,7 @@ def variantcaller(args, dfgenes):
                         outputfile1.write(i+"\t"+vari+"_"+variants_ref[str(base)]+"_"+str(base)+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
                     else:
                         try:
-                            gene_variant=gtf_coord[str(base)]
+                            gene_variant=",".join(gtf_coord[str(base)])
                             outputfile.write(i+"\t"+vari+"_"+variants_ref[str(base)]+"_"+str(base)+"_"+gene_variant+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
                             outputfile1.write(i+"\t"+vari+"_"+variants_ref[str(base)]+"_"+str(base)+"_"+gene_variant+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
                         except KeyError:
