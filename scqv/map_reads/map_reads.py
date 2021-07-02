@@ -41,12 +41,12 @@ def map2viralgenome(args):
     elif args.aligner == "bbmap":
         files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
         bbmapgenomefile = files_genome[0]
-    elif args.aligner == "star":
-        files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
-        genomefile = files_genome[0]
-        arg=[os.path.join(star2path, "STAR"), "--runThreadN", args.processors, "--runMode", "genomeGenerate", 
-            "--genomeDir", os.path.join(args.path2genome, "STAR_indicies"),"--genomeFastaFiles", genomefile]
-        ef._run_subprocesses(arg, "STATUS: generating indicies for STAR ...", "generating indicies for STAR")
+    # elif args.aligner == "star":
+    #     files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
+    #     genomefile = files_genome[0]
+    #     arg=[os.path.join(star2path, "STAR"), "--runThreadN", args.processors, "--runMode", "genomeGenerate", 
+    #         "--genomeDir", os.path.join(args.path2genome, "STAR_indicies"),"--genomeFastaFiles", genomefile]
+    #     ef._run_subprocesses(arg, "STATUS: generating indicies for STAR ...", "generating indicies for STAR")
     else:
         raise ValueError(args.aligner+" not an available aligner specify bbmap or bowtie2")
 
