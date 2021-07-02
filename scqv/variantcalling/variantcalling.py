@@ -37,13 +37,13 @@ def variantcaller(args, dfgenes):
                 else:
                     larray = line.strip().split("\t")
                     if larray[2] == "gene":
-                        tmp = larray[8].split(";")
+                        tmp = larray[8].split("; ")
                         for i in tmp:
-                            if i.startswith("gene_name"):
-                                gene = re.sub("gene_name ", "", i)
+                            if i.startswith("gene_id"):
+                                gene = re.sub("gene_id ", "", i)
                                 gene = re.sub("\"", "", gene)
-                    for i in range(larray[3], larray[4]+1):
-                        gtf_coord.setdefault(i, []).append(gene)
+                    for i in range(int(larray[3]), int(larray[4])+1):
+                        gtf_coord.setdefault(str(i), set()).add(gene)
 
     arg=[os.path.join(samtoolspath, "samtools"), "faidx", genomefile, "-o", genomefile+".fai"]
     ef._run_subprocesses(arg, "STATUS: indexing genome file", "indexing genome file")
@@ -111,17 +111,17 @@ def variantcaller(args, dfgenes):
                     depthweight = dfvirus.loc[i, "umi"]/maxdepth
                     weightedper = per*depthweight
                     if dfgenes is False:
-                        outputfile.write(i+"\t"+vari+"_"+variants_ref[str(base)]+"_"+str(base)+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
-                        outputfile1.write(i+"\t"+vari+"_"+variants_ref[str(base)]+"_"+str(base)+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
+                        outputfile.write(i+"\t"+variants_ref[str(base)]+"_to_"+vari+"_"+str(base)+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
+                        outputfile1.write(i+"\t"+variants_ref[str(base)]+"_to_"+vari+"_"+str(base)+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
                     else:
                         try:
-                            gene_variant=",".join(gtf_coord[str(base)])
-                            outputfile.write(i+"\t"+vari+"_"+variants_ref[str(base)]+"_"+str(base)+"_"+gene_variant+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
-                            outputfile1.write(i+"\t"+vari+"_"+variants_ref[str(base)]+"_"+str(base)+"_"+gene_variant+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
+                            gene_variant=".".join(gtf_coord[str(base)])
+                            outputfile.write(i+"\t"+variants_ref[str(base)]+"_to_"+vari+"_"+str(base)+"_"+gene_variant+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
+                            outputfile1.write(i+"\t"+variants_ref[str(base)]+"_to_"+vari+"_"+str(base)+"_"+gene_variant+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
                         except KeyError:
                             gene_variant="OCR"
-                            outputfile.write(i+"\t"+vari+"_"+variants_ref[str(base)]+"_"+str(base)+"_"+gene_variant+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
-                            outputfile1.write(i+"\t"+vari+"_"+variants_ref[str(base)]+"_"+str(base)+"_"+gene_variant+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
+                            outputfile.write(i+"\t"+variants_ref[str(base)]+"_to_"+vari+"_"+str(base)+"_"+gene_variant+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
+                            outputfile1.write(i+"\t"+variants_ref[str(base)]+"_to_"+vari+"_"+str(base)+"_"+gene_variant+"\t"+str(per)+"\t"+str(depthweight)+"\t"+str(weightedper)+"\t"+str(base)+"\n")
                 except KeyError:
                     pass
                     # print("WARNING: No variant "+vari+" in cell "+i)
