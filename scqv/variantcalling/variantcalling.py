@@ -87,12 +87,12 @@ def variantcaller(args, dfgenes):
 
     print("STATUS: Extract reads with variant  ...")
     outputfile = open(os.path.join(args.output_path, "variant_calling_results", "cellvariantcallstotal.txt"), 'w')
-    outputfile.write("cell_barcode\tvariantinfo(variant_ref_base)\tpercentageofumi\tweight(virus umi count in cell/max virus umi count)\tweightedpercentage\tbase\n")
+    outputfile.write("cell_barcode\tvariantinfo(ref_variant_base_gene)\tpercentageofumi\tweight(virus umi count in cell/max virus umi count)\tweightedpercentage\tbase\n")
     for base in tqdm(variants):
         st.sam2tsv_function(os.path.join(args.output_path, "virus_al_sort.bam"), genomefile, int(base), outputfile=os.path.join(args.output_path, "_tmp", "_variant_tmp", "variant_"+str(base)+"_reads.txt"))
         # print("STATUS: Pull out variant information for "+base)
         outputfile1 = open(os.path.join(args.output_path, "variant_calling_results",  "cellvariantcalls_"+str(base)+".txt"), 'w')
-        outputfile1.write("cell_barcode\tvariantinfo(variant_ref_base)\tpercentageofumi\tweight(virus umi count in cell/max virus umi count)\tweightedpercentage\tbase\n")
+        outputfile1.write("cell_barcode\tvariantinfo(ref_variant_base_gene)\tpercentageofumi\tweight(virus umi count in cell/max virus umi count)\tweightedpercentage\tbase\n")
         dftmp = pd.read_table(os.path.join(args.output_path, "_tmp", "_variant_tmp", "variant_"+str(base)+"_reads.txt"), header=None)
         reads_tmp = set(reads).intersection(set(dftmp[0].to_list()))
         dftmpreads = dftmp[dftmp[0].isin(reads_tmp)]
