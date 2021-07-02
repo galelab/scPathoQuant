@@ -20,7 +20,7 @@ def quantify_reads(output_path,filename):
                 if larray[-1].startswith("XF:Z:__ambiguous"):
                     pass
                 else:
-                    reads_mapping[larray[0]]=re.sub("XF:Z:", "", larray[-1])
+                    reads_mapping[larray[0]]=re.sub("XF:\w+:", "", larray[-1])
 
     ## -- get umi and cell barcode information 
     if len(reads_mapping.keys()) > 0:
