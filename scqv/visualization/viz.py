@@ -12,7 +12,7 @@ def generate_viral_copy_plots(args, gene_name, dfumi):
         sns.set_theme(style="whitegrid")
         dfumi[gene_name]=[gene_name]*dfumi.shape[0]
         ax = sns.violinplot(x=gene_name, y="umi",data=dfumi)
-        ax.set(xlabel='', ylabel="counts")
+        ax.set(xlabel='', ylabel="UMI counts")
         g = ax.get_figure()
         g.savefig(os.path.join(args.output_path, "viral_copy.png"), dpi=500)
     else:
@@ -24,7 +24,9 @@ def generate_viral_gene_plots(args, dfumi):
         sns.set_theme(style="whitegrid")
         # dfumi[gene_name]=[gene_name]*dfumi.shape[0]
         ax = sns.violinplot(x="gene", y="umi",data=dfumi)
-        ax.set(xlabel='genes', ylabel="counts")
+        xlabels = ax.get_xticklabels()
+        ax.set_xticklabels(labels=xlabels, rotation=45)
+        ax.set(xlabel='genes', ylabel="UMI counts")
         g = ax.get_figure()
         g.savefig(os.path.join(args.output_path, "viral_genes.png"), dpi=500)
     else:
