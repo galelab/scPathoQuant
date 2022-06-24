@@ -44,12 +44,16 @@ def quantify_reads(output_path,filename):
         if len(drop_reads) > 0:
             print ("STATUS: Dropping "+str(len(drop_reads))+" UMIs because of inconsistent gene annotations")
             df2 = df2.drop(drop_reads)
-
-        df_umi = df2[["cell_barcode", "umi", "gene"]].groupby(["cell_barcode", "gene"]).count()
-        df_umi = df_umi.reset_index()
-        df_umi = df_umi.set_index('cell_barcode')
-        df_umi.to_csv(os.path.join(output_path, "virus_al_gene_counts.csv"))
-        return(df_umi)
+        if df2.empty:
+            print("STATUS: no reads able to be quantifie to viral genes.. will not add genes to 10x filtered files")
+            return(False)
+        else:
+            df_umi = df2[["cell_barcode", "umi", "gene"]].groupby(["cell_barcode", "gene"]).count()
+            df_umi = df_umi.reset_index()
+            df_umi = df_umi.set_index('cell_barcode')
+            df_umi.to_csv(os.path.join(output_path, "virus_al_gene_counts.csv"))
+            return(df_umi)
+            
     else: 
         print("STATUS: no reads mapping to viral genes.. will not add genes to 10x filtered files")
         df_umi = pd.DataFrame(columns=["cell_barcode", "gene", "umi"])
