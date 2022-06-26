@@ -78,5 +78,5 @@ def process_unmapped_reads(args, viable_cb):
         f.close()
         _check_subprocess_run(process.returncode, stderrdata, "converting reads to fastq")
     except:
-        print("STATUS: _tmp folder already exists so not regenerating data")
+        print("STATUS: _tmp folder already exists so not regenerating data, path"+str(os.path.join(args.output_path, "_tmp")))
         pass
