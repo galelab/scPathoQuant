@@ -61,7 +61,10 @@ def map2viralgenome(args):
                 "basecov="+os.path.join(args.output_path,"basecov.txt"), "bincov="+os.path.join(args.output_path, "bincov.txt"),
                 "out="+os.path.join(args.output_path, "virus_al.sam")]
             ef._run_subprocesses(arg, "STATUS: Align reads bbmap local...", "aligning reads")
-    else:
+        elif args.aligner == "star":
+            raise ValueError(args.aligner+" local alignment doesn't work with star --alignment_type needs to be set to global")
+
+    elif args.alignment_type == "global":
         if args.aligner == "bowtie2":
             arg=[os.path.join(bowtie2path, "bowtie2"), "-p", args.processors, "-q", os.path.join(args.output_path,"_tmp", "unmapped.fq"), "-x", os.path.join(args.path2genome,"genome"), "-S", os.path.join(args.output_path, "virus_al.sam")]
             ef._run_subprocesses(arg, "STATUS: Align reads bowtie2 global...", "aligning reads")
@@ -75,6 +78,8 @@ def map2viralgenome(args):
             arg=[os.path.join(star2path, "STAR"), "--runThreadN", args.processors, "--genomeDir",  os.path.join(args.path2genome, "STAR_indicies"),
                 "--outSAMtype", "SAM", "--readFilesIn", os.path.join(args.output_path,"_tmp", "unmapped.fq"), "--outFileNamePrefix", os.path.join(args.output_path, "virus_al")]
             ef._run_subprocesses(arg, "STATUS: Align reads star global..", "aligning reads star global")
+    else:
+        raise ValueError(args.alignment_type+" not an available set to global or local, all lowercase")
 
     # --generate necessary output files
     arg=[os.path.join(samtoolspath, "samtools"), "view", "-@", args.processors, "-F", "4", "-Sb", os.path.join(args.output_path,"virus_al.sam"), "-o", os.path.join(args.output_path, "virus_al.bam")]
