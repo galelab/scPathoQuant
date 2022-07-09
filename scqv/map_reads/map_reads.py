@@ -44,10 +44,12 @@ def map2viralgenome(args):
     elif args.aligner == "star":
         files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
         genomefile = files_genome[0]
-
-        arg=[os.path.join(star2path, "STAR"), "--runThreadN", args.processors, "--runMode", "genomeGenerate", 
-            "--genomeDir", os.path.join(args.path2genome, "STAR_indicies"),"--genomeFastaFiles", genomefile]
-        ef._run_subprocesses(arg, "STATUS: generating indicies for STAR ...", "generating indicies for STAR")
+        # if os.path.isdir(os.path.join(args.path2genome, "STAR_indicies")) is False:
+        #     arg=[os.path.join(star2path, "STAR"), "--runThreadN", args.processors, "--runMode", "genomeGenerate", 
+        #         "--genomeDir", os.path.join(args.path2genome, "STAR_indicies"),"--genomeFastaFiles", genomefile]
+        #     ef._run_subprocesses_star(arg, "STATUS: generating indicies for STAR ...", "generating indicies for STAR")
+        # else:
+        #     print("STATUS: STAR indexes have already been made for this genome")
     else:
         raise ValueError(args.aligner+" not an available aligner specify star, bbmap or bowtie2, all lowercase")
 
@@ -75,10 +77,12 @@ def map2viralgenome(args):
                 "basecov="+os.path.join(args.output_path,"basecov.txt"), "bincov="+os.path.join(args.output_path, "bincov.txt"),
                 "out="+os.path.join(args.output_path, "virus_al.sam")]
             ef._run_subprocesses(arg, "STATUS: Align reads bbmap global...", "aligning reads")
-        elif args.aligner == "star":
-            arg=[os.path.join(star2path, "STAR"), "--runThreadN", args.processors, "--genomeDir",  os.path.join(args.path2genome, "STAR_indicies"),
-                "--outSAMtype", "SAM", "--readFilesIn", os.path.join(args.output_path,"_tmp", "unmapped.fq"), "--outFileNamePrefix", os.path.join(args.output_path, "virus_al")]
-            ef._run_subprocesses(arg, "STATUS: Align reads star global..", "aligning reads star global")
+        # elif args.aligner == "star":
+        #     arg=[os.path.join(star2path, "STAR"), "--runThreadN",  args.processors, "--genomeDir", os.path.join(args.path2genome, "STAR_indicies"),
+        #         "--outSAMtype", "SAM", "--readFilesIn", os.path.join(args.output_path,"_tmp", "unmapped.fq"), "--outFileNamePrefix", os.path.join(args.output_path, "virus_al")]
+        #     # args["starseqr.py" "-1" os.path.join(args.output_path,"_tmp", "unmapped.fq") -m 1 -p RNA_test -t 12 -i path/STAR_INDEX -g gencode.gtf -r hg19.fa -vv
+        #     ef._run_subprocesses_star(arg, "STATUS: Align reads star global..", "aligning reads star global")
+            # os.rename(os.path.join(args.output_path, "virus_alAligned.out.sam"), os.path.join(args.output_path, "virus_al.sam"))
     else:
         raise ValueError(args.alignment_type+" not an available set to global or local, all lowercase")
 
