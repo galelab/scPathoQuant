@@ -14,8 +14,11 @@ def generate_viral_copy_plots(args, gene_name, dfumi):
         ax = sns.violinplot(x=gene_name, y="umi",data=dfumi)
         ax.set(xlabel='', ylabel="UMI counts")
         g = ax.get_figure()
-        g.set_figwidth(8)
+        g.set_figheight(4)
+        g.set_figwidth(4)
         g.savefig(os.path.join(args.output_path, "viral_copy.png"), dpi=500)
+        g.savefig(os.path.join(args.output_path, "viral_copy.svg"), dpi=500)
+
     else:
         print ("STATUS: No cells have viral reads not generating violin plot")
 
@@ -29,8 +32,11 @@ def generate_viral_gene_plots(args, dfumi):
         ax.set_xticklabels(labels=xlabels, rotation=45)
         ax.set(xlabel='genes', ylabel="UMI counts")
         g = ax.get_figure()
-        g.set_figheight(11.5)
-        g.set_figwidth(8)
+        g.subplots_adjust(bottom=0.4)
+        g.set_figheight(4)
+        g.set_figwidth(6)
         g.savefig(os.path.join(args.output_path, "viral_genes.png"), dpi=500)
+        g.savefig(os.path.join(args.output_path, "viral_genes.svg"), dpi=500)
+
     else:
         print ("STATUS: No cells have viral reads not generating violin plot for viral genes")
