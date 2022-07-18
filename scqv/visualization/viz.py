@@ -14,6 +14,7 @@ def generate_viral_copy_plots(args, gene_name, dfumi):
         ax = sns.violinplot(x=gene_name, y="umi",data=dfumi)
         ax.set(xlabel='', ylabel="UMI counts")
         g = ax.get_figure()
+        g.subplots_adjust(left=0.2)
         g.set_figheight(4)
         g.set_figwidth(4)
         g.savefig(os.path.join(args.output_path, "viral_copy.png"), dpi=500)
