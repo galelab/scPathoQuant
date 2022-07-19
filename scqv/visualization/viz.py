@@ -30,10 +30,10 @@ def generate_viral_gene_plots(args, dfumi):
         # dfumi[gene_name]=[gene_name]*dfumi.shape[0]
         ax = sns.violinplot(x="gene", y="umi",data=dfumi)
         xlabels = ax.get_xticklabels()
-        ax.set_xticklabels(labels=xlabels, rotation=45)
+        ax.set_xticklabels(labels=xlabels, rotation=90)
         ax.set(xlabel='genes', ylabel="UMI counts")
         g = ax.get_figure()
-        g.subplots_adjust(bottom=0.4)
+        g.subplots_adjust(left=0.2,bottom=0.5)
         g.set_figheight(4)
         g.set_figwidth(6)
         g.savefig(os.path.join(args.output_path, "viral_genes.png"), dpi=500)
