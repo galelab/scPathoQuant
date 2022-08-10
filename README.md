@@ -31,7 +31,7 @@ Set the following parameters
 * -vc (--variantcaller) = will using BCFtools call variants in the viral genome
 Example run:
 ```bash 
- scviralquant -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder -overwrite
+ scviralquant -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder
 ```
 
 ### Output files 
