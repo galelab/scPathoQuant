@@ -54,37 +54,21 @@ def map2viralgenome(args):
         raise ValueError(args.aligner+" not an available aligner specify star, bbmap or bowtie2, all lowercase")
 
     # -- align reads 
-    if args.alignment_type == "local":
-        if args.aligner == "bowtie2":
-            arg=[os.path.join(bowtie2path, "bowtie2"), "-p", args.processors, "-q", os.path.join(args.output_path,"_tmp", "unmapped.fq"), "--local", "-x", os.path.join(args.path2genome,"genome"), "-S", os.path.join(args.output_path, "virus_al.sam")]
-            ef._run_subprocesses(arg, "STATUS: Align reads bowtie2 local...", "aligning reads")
-        elif args.aligner == "bbmap":
-            arg=[os.path.join(bbmap2path, "bbmap.sh"), "ref="+bbmapgenomefile, "in="+os.path.join(args.output_path,"_tmp", "unmapped.fq"), "nodisk=t" ,"local=t",
-                "covstats="+os.path.join(args.output_path, "constats.txt"), "covhist="+os.path.join(args.output_path,"covhist.txt"),
-                "basecov="+os.path.join(args.output_path,"basecov.txt"), "bincov="+os.path.join(args.output_path, "bincov.txt"),
-                "out="+os.path.join(args.output_path, "virus_al.sam")]
-            ef._run_subprocesses(arg, "STATUS: Align reads bbmap local...", "aligning reads")
-        elif args.aligner == "star":
-            raise ValueError(args.aligner+" local alignment doesn't work with star --alignment_type needs to be set to global")
-
-    elif args.alignment_type == "global":
-        if args.aligner == "bowtie2":
-            arg=[os.path.join(bowtie2path, "bowtie2"), "-p", args.processors, "-q", os.path.join(args.output_path,"_tmp", "unmapped.fq"), "-x", os.path.join(args.path2genome,"genome"), "-S", os.path.join(args.output_path, "virus_al.sam")]
-            ef._run_subprocesses(arg, "STATUS: Align reads bowtie2 global...", "aligning reads")
-        elif args.aligner == "bbmap":
-            arg=[os.path.join(bbmap2path, "bbmap.sh"), "ref="+bbmapgenomefile, "in="+os.path.join(args.output_path,"_tmp", "unmapped.fq"), "nodisk=t" ,"local=f",
-                "covstats="+os.path.join(args.output_path, "constats.txt"), "covhist="+os.path.join(args.output_path,"covhist.txt"),
-                "basecov="+os.path.join(args.output_path,"basecov.txt"), "bincov="+os.path.join(args.output_path, "bincov.txt"),
-                "out="+os.path.join(args.output_path, "virus_al.sam")]
-            ef._run_subprocesses(arg, "STATUS: Align reads bbmap global...", "aligning reads")
-        # elif args.aligner == "star":
-        #     arg=[os.path.join(star2path, "STAR"), "--runThreadN",  args.processors, "--genomeDir", os.path.join(args.path2genome, "STAR_indicies"),
-        #         "--outSAMtype", "SAM", "--readFilesIn", os.path.join(args.output_path,"_tmp", "unmapped.fq"), "--outFileNamePrefix", os.path.join(args.output_path, "virus_al")]
-        #     # args["starseqr.py" "-1" os.path.join(args.output_path,"_tmp", "unmapped.fq") -m 1 -p RNA_test -t 12 -i path/STAR_INDEX -g gencode.gtf -r hg19.fa -vv
-        #     ef._run_subprocesses_star(arg, "STATUS: Align reads star global..", "aligning reads star global")
-            # os.rename(os.path.join(args.output_path, "virus_alAligned.out.sam"), os.path.join(args.output_path, "virus_al.sam"))
-    else:
-        raise ValueError(args.alignment_type+" not an available set to global or local, all lowercase")
+    if args.aligner == "bowtie2":
+        arg=[os.path.join(bowtie2path, "bowtie2"), "-p", args.processors, "-q", os.path.join(args.output_path,"_tmp", "unmapped.fq"), "-x", os.path.join(args.path2genome,"genome"), "-S", os.path.join(args.output_path, "virus_al.sam")]
+        ef._run_subprocesses(arg, "STATUS: Align reads bowtie2 global...", "aligning reads")
+    elif args.aligner == "bbmap":
+        arg=[os.path.join(bbmap2path, "bbmap.sh"), "ref="+bbmapgenomefile, "in="+os.path.join(args.output_path,"_tmp", "unmapped.fq"), "nodisk=t" ,"local=f",
+            "covstats="+os.path.join(args.output_path, "constats.txt"), "covhist="+os.path.join(args.output_path,"covhist.txt"),
+            "basecov="+os.path.join(args.output_path,"basecov.txt"), "bincov="+os.path.join(args.output_path, "bincov.txt"),
+            "out="+os.path.join(args.output_path, "virus_al.sam")]
+        ef._run_subprocesses(arg, "STATUS: Align reads bbmap global...", "aligning reads")
+    # elif args.aligner == "star":
+    #     arg=[os.path.join(star2path, "STAR"), "--runThreadN",  args.processors, "--genomeDir", os.path.join(args.path2genome, "STAR_indicies"),
+    #         "--outSAMtype", "SAM", "--readFilesIn", os.path.join(args.output_path,"_tmp", "unmapped.fq"), "--outFileNamePrefix", os.path.join(args.output_path, "virus_al")]
+    #     # args["starseqr.py" "-1" os.path.join(args.output_path,"_tmp", "unmapped.fq") -m 1 -p RNA_test -t 12 -i path/STAR_INDEX -g gencode.gtf -r hg19.fa -vv
+    #     ef._run_subprocesses_star(arg, "STATUS: Align reads star global..", "aligning reads star global")
+        # os.rename(os.path.join(args.output_path, "virus_alAligned.out.sam"), os.path.join(args.output_path, "virus_al.sam"))
 
     # --generate necessary output files
     arg=[os.path.join(samtoolspath, "samtools"), "view", "-@", args.processors, "-F", "4", "-Sb", os.path.join(args.output_path,"virus_al.sam"), "-o", os.path.join(args.output_path, "virus_al.bam")]

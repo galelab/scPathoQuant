@@ -23,7 +23,6 @@ def parse_arguments():
     parser.add_argument("-p", "--processors", default=1)
     parser.add_argument("-p2genome", "--path2genome", type=str, required=True)
     parser.add_argument("-align", "--aligner", type=str, required=True, default="bowtie2")
-    parser.add_argument("-aligntype", "--alignment_type", type=str, default="local")
     parser.add_argument("-overwrite", "--overwrite_feature_matrix", required=False, action="store_true")
     parser.add_argument("--tmp_removal", required=False, action="store_true")
     parser.add_argument("-vc", "--variantcaller", required=False, action="store_true")
