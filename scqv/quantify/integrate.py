@@ -18,7 +18,7 @@ def integrate_data_2_matrix(args, dfumi, gene_name):
     if args.overwrite_feature_matrix:
         filter_folder="filtered_feature_bc_matrix"
     else:
-        filter_folder="filtered_feature_bc_matrix_"+args.aligner+"_"+args.alignment_type
+        filter_folder="filtered_feature_bc_matrix_"+args.aligner
         if os.path.isdir(os.path.join(path10x, "outs", filter_folder)) is False:
             shutil.copytree(os.path.join(path10x, "outs", "filtered_feature_bc_matrix"), os.path.join(path10x, "outs", filter_folder), copy_function = shutil.copy)
         else:
@@ -58,7 +58,7 @@ def integrate_viralgenes_data_2_matrix(args, dfumi):
     if args.overwrite_feature_matrix:
         filter_folder="filtered_feature_bc_matrix"
     else:
-        filter_folder="filtered_feature_bc_matrix_"+args.aligner+"_"+args.alignment_type
+        filter_folder="filtered_feature_bc_matrix_"+args.aligner
         if os.path.isdir(os.path.join(path10x, "outs", filter_folder)) is False:
            shutil.copytree(os.path.join(path10x, "outs", "filtered_feature_bc_matrix"), os.path.join(path10x,  "outs", filter_folder), copy_function = shutil.copy)
     print ("STATUS: Integrating viral gene counts into 10x matrix and feature files")
