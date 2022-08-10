@@ -49,15 +49,4 @@ Output files by scViralQuant
 * virus_al_sort_counts.sam - htseq output reads mapping to virus
 * virus_genes_al_sort_counts.sam - htseq output reads mapping to individual virus genes (will not be produced if viral gtf is not provided)
 * Overwrites original 10x data provided to include viral counts and viral gene counts (if gtf file is provided)
-* virus.bcf - bcf format of variantn calls
-* virus_calls.vcf - variant calls by BCFtools
-* variant_calling_results/ - contains results for which cells support the variant calls (if the viral gtf is provided then output will provide information about where the snp is falling, in the coding region of a gene or outside coding region (OCR))
 
-### Running scViralQuant variantcalling module
-----------------------------------------------
-The variant calling module will use BCFtools to call variants in the viral genome in the single cell sample.  Then a percentage of reads supporting the variant call that map to the variant position in each cell will be calculated.  Additionally a weighted percentage adjusting for total number of reads mapping to the virus will be calculated and put in to the output folder under a subfolder called variant_calling_results/.  This can then be information can be integrated into a seurat object for visualization using https://github.com/lwhitmore/RscViralQuantIntegrate.
-
-Example run:
-```bash 
- scviralquant -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder -overwrite --variantcaller
-```
