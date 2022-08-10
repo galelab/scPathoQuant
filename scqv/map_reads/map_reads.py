@@ -1,6 +1,6 @@
 __author__ = "Leanne Whitmore"
 __email__ = "leanne382@gmail.com"
-__description__ = "map reads with bowtie (currently only version)"
+__description__ = "map reads with bowtie/bbmap"
 
 import re
 import os
