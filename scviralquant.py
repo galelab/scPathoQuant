@@ -39,7 +39,5 @@ if __name__ == '__main__':
     if dfgenes is not False:
         viz.generate_viral_gene_plots(args, dfgenes)
         integrate.integrate_viralgenes_data_2_matrix(args, dfgenes)
-    if args.variantcaller:
-        vcl.variantcaller(args, dfgenes)
     if args.tmp_removal:
         shutil.rmtree(os.path.join(args.output_path,"_tmp"))
