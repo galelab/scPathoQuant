@@ -17,16 +17,25 @@ def integrate_data_2_matrix(args, dfumi, gene_name):
     viralcopy = []
     if args.overwrite_feature_matrix:
         filter_folder="filtered_feature_bc_matrix"
+        raw_folder="raw_feature_bc_matrix"
     else:
         filter_folder="filtered_feature_bc_matrix_"+args.aligner
+        raw_folder="raw_feature_bc_matrix"+args.aligner
         if os.path.isdir(os.path.join(path10x, "outs", filter_folder)) is False:
             shutil.copytree(os.path.join(path10x, "outs", "filtered_feature_bc_matrix"), os.path.join(path10x, "outs", filter_folder), copy_function = shutil.copy)
         else:
-            print("WARNING: folder exists so removing and recopying original")
+            print("WARNING: filter folder exists so removing and recopying original")
             shutil.rmtree(os.path.join(path10x, "outs", filter_folder))
             shutil.copytree(os.path.join(path10x, "outs", "filtered_feature_bc_matrix"), os.path.join(path10x, "outs", filter_folder), copy_function = shutil.copy)
+        if os.path.isdir(os.path.join(path10x, "outs", raw_folder)) is False:
+            shutil.copytree(os.path.join(path10x, "outs", "raw_feature_bc_matrix"), os.path.join(path10x, "outs", raw_folder), copy_function = shutil.copy)
+        else:
+            print("WARNING: raw folder exists so removing and recopying original")
+            shutil.rmtree(os.path.join(path10x, "outs", raw_folder))
+            shutil.copytree(os.path.join(path10x, "outs", "raw_feature_bc_matrix"), os.path.join(path10x, "outs", raw_folder), copy_function = shutil.copy)
 
-    print ("STATUS: Integrating viral copy counts into 10x matrix and feature files")
+    ## add data to filter folder files
+    print ("STATUS: Integrating viral copy counts into 10x matrix and feature files in filter folder")
     mat = scipy.io.mmread(os.path.join(path10x,"outs", filter_folder, "matrix.mtx.gz"))
     gene_names = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs", filter_folder, "features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
     barcodes = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs", filter_folder, "barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
@@ -49,7 +58,34 @@ def integrate_data_2_matrix(args, dfumi, gene_name):
         f_in.write(i[0]+"\t"+i[1]+"\t"+i[2]+"\n")
     f_in.close()
     arg=['gzip', "-f", os.path.join(path10x,"outs",filter_folder,"features.tsv")]
-    ef._run_subprocesses(arg, "STATUS: zipping new features file", "zipping new features file")
+    ef._run_subprocesses(arg, "STATUS: zipping new features filter files in feature folder", "zipping new features file in feature folder")
+
+    ## add data to raw folder files
+    print ("STATUS: Integrating viral copy counts into 10x matrix and feature files in raw folder")
+    mat = scipy.io.mmread(os.path.join(path10x,"outs", raw_folder, "matrix.mtx.gz"))
+    gene_names = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs", raw_folder, "features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
+    barcodes = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs", raw_folder, "barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
+    for i in barcodes:
+        try:
+            count = dfumi.loc[i,'umi']
+            viralcopy.append(count)
+        except KeyError:
+            viralcopy.append(0)
+    npviralcopy = np.array(viralcopy)
+    mat = mat.todense()
+    mat = np.vstack([mat,npviralcopy])
+    mat = coo_matrix(mat)
+    gene_names.append((gene_name, gene_name, "Gene Expression"))
+    scipy.io.mmwrite(os.path.join(path10x,"outs",raw_folder,"matrix"), mat)
+    arg=['gzip', "-f", os.path.join(path10x,"outs",raw_folder,"matrix.mtx")]
+    ef._run_subprocesses(arg, "STATUS: zipping new matrix file", "zipping new matrix file")
+    f_in = open(os.path.join(path10x,"outs",raw_folder,"features.tsv"), 'w')
+    for i in gene_names:
+        f_in.write(i[0]+"\t"+i[1]+"\t"+i[2]+"\n")
+    f_in.close()
+    arg=['gzip', "-f", os.path.join(path10x,"outs",raw_folder,"features.tsv")]
+    ef._run_subprocesses(arg, "STATUS: zipping new features files raw folder", "zipping new features file raw folder")
+
 
 
 def integrate_viralgenes_data_2_matrix(args, dfumi):
@@ -57,11 +93,18 @@ def integrate_viralgenes_data_2_matrix(args, dfumi):
     viralcopy = []
     if args.overwrite_feature_matrix:
         filter_folder="filtered_feature_bc_matrix"
+        raw_folder="raw_feature_bc_matrix"
     else:
         filter_folder="filtered_feature_bc_matrix_"+args.aligner
+        raw_folder="raw_feature_bc_matrix"+args.aligner
+
         if os.path.isdir(os.path.join(path10x, "outs", filter_folder)) is False:
-           shutil.copytree(os.path.join(path10x, "outs", "filtered_feature_bc_matrix"), os.path.join(path10x,  "outs", filter_folder), copy_function = shutil.copy)
-    print ("STATUS: Integrating viral gene counts into 10x matrix and feature files")
+           shutil.copytree(os.path.join(path10x, "outs", "filtered_feature_bc_matrix"), os.path.join(path10x, "outs", filter_folder), copy_function = shutil.copy)
+        if os.path.isdir(os.path.join(path10x, "outs", raw_folder)) is False:
+           shutil.copytree(os.path.join(path10x, "outs", "raw_feature_bc_matrix"), os.path.join(path10x,  "outs", raw_folder), copy_function = shutil.copy)
+
+    ## add data to filter folder files
+    print ("STATUS: Integrating viral gene counts into 10x matrix and feature files in filter folders")
     mat = scipy.io.mmread(os.path.join(path10x,"outs",filter_folder,"matrix.mtx.gz"))
     gene_names = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs",filter_folder,"features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
     barcodes = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs",filter_folder,"barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
@@ -89,4 +132,35 @@ def integrate_viralgenes_data_2_matrix(args, dfumi):
         f_in.write(i[0]+"\t"+i[1]+"\t"+i[2]+"\n")
     f_in.close()
     arg=['gzip', "-f", os.path.join(path10x,"outs",filter_folder,"features.tsv")]
-    ef._run_subprocesses(arg, "STATUS: zipping new features file", "zipping new features file")    
+    ef._run_subprocesses(arg, "STATUS: zipping new features file in feature folder", "zipping new features file in feature folder")
+
+    ## add data to raw folder files
+    print ("STATUS: Integrating viral gene counts into 10x matrix and feature files in raw folder")
+    mat = scipy.io.mmread(os.path.join(path10x,"outs",raw_folder,"matrix.mtx.gz"))
+    gene_names = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs",raw_folder,"features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
+    barcodes = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs",raw_folder,"barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
+    uniqgenes = set(dfumi['gene'].to_list())
+    counts4genes = {}
+    dfumi = dfumi.reset_index()
+    for gene in uniqgenes:
+        for i in barcodes:
+            try:
+                count = dfumi.loc[(dfumi['cell_barcode']==i) & (dfumi['gene'] == gene), 'umi'].iloc[0]
+                counts4genes.setdefault(gene, []).append(count)
+            except (KeyError, IndexError) as e:
+                counts4genes.setdefault(gene, []).append(0)
+    npgenes = np.array(list(counts4genes.values()))
+    mat = mat.todense()
+    mat = np.vstack([mat,npgenes])
+    mat = coo_matrix(mat)
+    for gene in list(counts4genes.keys()):
+        gene_names.append((gene, gene, "Gene Expression"))
+    scipy.io.mmwrite(os.path.join(path10x,"outs",raw_folder,"matrix"), mat)
+    arg=['gzip', "-f", os.path.join(path10x,"outs",raw_folder,"matrix.mtx")]
+    ef._run_subprocesses(arg, "STATUS: zipping new matrix file", "zipping new matrix file")
+    f_in = open(os.path.join(path10x,"outs",raw_folder,"features.tsv"), 'w')
+    for i in gene_names:
+        f_in.write(i[0]+"\t"+i[1]+"\t"+i[2]+"\n")
+    f_in.close()
+    arg=['gzip', "-f", os.path.join(path10x,"outs",raw_folder,"features.tsv")]
+    ef._run_subprocesses(arg, "STATUS: zipping new features file in raw folder", "zipping new features file in raw folder")    
