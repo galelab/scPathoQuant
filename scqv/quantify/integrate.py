@@ -42,43 +42,55 @@ def integrate_data_2_matrix(args, dfumi, gene_name):
     for i in barcodes:
         try:
             count = dfumi.loc[i,'umi']
-            viralcopy.append(count)
+            viralcopy.append([len(gene_names)+1, barcodes.index(i)+1, count])
         except KeyError:
-            viralcopy.append(0)
-    npviralcopy = np.array(viralcopy)
-    mat = mat.todense()
-    mat = np.vstack([mat,npviralcopy])
-    mat = coo_matrix(mat)
+           pass
+    # npviralcopy = np.array(viralcopy)
+    # mat = mat.todense()
+    # mat = np.vstack([mat,npviralcopy])
+    # mat = coo_matrix(mat)
     gene_names.append((gene_name, gene_name, "Gene Expression"))
-    scipy.io.mmwrite(os.path.join(path10x,"outs",filter_folder,"matrix"), mat)
+    # scipy.io.mmwrite(os.path.join(path10x,"outs",filter_folder,"matrix"), mat)
+    arg=['gunzip', "-f", os.path.join(path10x,"outs",filter_folder,"matrix.mtx.gz")]
+    ef._run_subprocesses(arg, "STATUS: unzipping matrix file", "unzipping matrix file")
+    f_in = open(os.path.join(path10x,"outs",filter_folder,"matrix.mtx"), 'a')
+    for i in viralcopy:
+        f_in.write(i[0]+" "+i[1]+" "+i[2]+"\n")
+    f_in.close()
     arg=['gzip', "-f", os.path.join(path10x,"outs",filter_folder,"matrix.mtx")]
-    ef._run_subprocesses(arg, "STATUS: zipping new matrix file", "zipping new matrix file")
+    ef._run_subprocesses(arg, "STATUS: zipping edited matrix file", "zipping edited matrix file")
     f_in = open(os.path.join(path10x,"outs",filter_folder,"features.tsv"), 'w')
     for i in gene_names:
         f_in.write(i[0]+"\t"+i[1]+"\t"+i[2]+"\n")
     f_in.close()
     arg=['gzip', "-f", os.path.join(path10x,"outs",filter_folder,"features.tsv")]
-    ef._run_subprocesses(arg, "STATUS: zipping new features filter files in feature folder", "zipping new features file in feature folder")
+    ef._run_subprocesses(arg, "STATUS: zipping new features files filter folder", "zipping new features file filter folder")
 
     ## add data to raw folder files
     print ("STATUS: Integrating viral copy counts into 10x matrix and feature files in raw folder")
-    mat = scipy.io.mmread(os.path.join(path10x,"outs", raw_folder, "matrix.mtx.gz"))
+    # mat = scipy.io.mmread(os.path.join(path10x,"outs", raw_folder, "matrix.mtx.gz"))
     gene_names = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs", raw_folder, "features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
     barcodes = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs", raw_folder, "barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
     for i in barcodes:
         try:
             count = dfumi.loc[i,'umi']
-            viralcopy.append(count)
+            viralcopy.append([len(gene_names)+1, barcodes.index(i)+1, count])
         except KeyError:
-            viralcopy.append(0)
-    npviralcopy = np.array(viralcopy)
-    mat = mat.todense()
-    mat = np.vstack([mat,npviralcopy])
-    mat = coo_matrix(mat)
+           pass
+    # npviralcopy = np.array(viralcopy)
+    # mat = mat.todense()
+    # mat = np.vstack([mat,npviralcopy])
+    # mat = coo_matrix(mat)
     gene_names.append((gene_name, gene_name, "Gene Expression"))
-    scipy.io.mmwrite(os.path.join(path10x,"outs",raw_folder,"matrix"), mat)
+    # scipy.io.mmwrite(os.path.join(path10x,"outs",raw_folder,"matrix"), mat)
+    arg=['gunzip', "-f", os.path.join(path10x,"outs",raw_folder,"matrix.mtx.gz")]
+    ef._run_subprocesses(arg, "STATUS: unzipping matrix file", "unzipping matrix file")
+    f_in = open(os.path.join(path10x,"outs",raw_folder,"matrix.mtx"), 'a')
+    for i in viralcopy:
+        f_in.write(i[0]+" "+i[1]+" "+i[2]+"\n")
+    f_in.close()
     arg=['gzip', "-f", os.path.join(path10x,"outs",raw_folder,"matrix.mtx")]
-    ef._run_subprocesses(arg, "STATUS: zipping new matrix file", "zipping new matrix file")
+    ef._run_subprocesses(arg, "STATUS: zipping edited matrix file", "zipping edited matrix file")
     f_in = open(os.path.join(path10x,"outs",raw_folder,"features.tsv"), 'w')
     for i in gene_names:
         f_in.write(i[0]+"\t"+i[1]+"\t"+i[2]+"\n")
