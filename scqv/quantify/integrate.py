@@ -109,7 +109,7 @@ def integrate_viralgenes_data_2_matrix(args, dfumi):
         raw_folder="raw_feature_bc_matrix"
     else:
         filter_folder="filtered_feature_bc_matrix_"+args.aligner
-        raw_folder="raw_feature_bc_matrix"+args.aligner
+        raw_folder="raw_feature_bc_matrix_"+args.aligner
 
         if os.path.isdir(os.path.join(path10x, "outs", filter_folder)) is False:
            shutil.copytree(os.path.join(path10x, "outs", "filtered_feature_bc_matrix"), os.path.join(path10x, "outs", filter_folder), copy_function = shutil.copy)
