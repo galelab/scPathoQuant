@@ -62,8 +62,10 @@ def integrate_data_2_matrix(args, dfumi, gene_name):
     # -- Edit header in the matrix file to have the correct new number of genes
     larray =lines[2].split(" ")
     larray[0]=len(gene_names)
+    larray[2] = len(lines)+len(viralcopy)-3
     lines[2]=" ".join(str(v) for v in larray)
-    
+    lines[2]=lines[2]+"\n"
+
     # -- Load edited data into new matrix file 
     f_in = open(os.path.join(path10x,"outs",filter_folder,"matrix.mtx"), 'w')
     for line in lines:
@@ -113,8 +115,9 @@ def integrate_data_2_matrix(args, dfumi, gene_name):
     # -- Edit header in the matrix file to have the correct new number of genes
     larray =lines[2].split(" ")
     larray[0]=len(gene_names)
+    larray[2] = len(lines)+len(viralcopy)-3
     lines[2]=" ".join(str(v) for v in larray)
-
+    lines[2]=lines[2]+"\n"
     # -- Load edited data into new matrix file 
     f_in = open(os.path.join(path10x,"outs",raw_folder,"matrix.mtx"), 'w')
     for line in lines:
@@ -185,7 +188,9 @@ def integrate_viralgenes_data_2_matrix(args, dfumi):
     # -- Edit header in the matrix file to have the correct new number of genes
     larray =lines[2].split(" ")
     larray[0]=len(gene_names)
+    larray[2] = len(lines)+len(counts4genes)-3
     lines[2]=" ".join(str(v) for v in larray)
+    lines[2]=lines[2]+"\n"
 
     # -- Load edited data into new matrix file 
     f_in = open(os.path.join(path10x,"outs",filter_folder,"matrix.mtx"), 'w')
@@ -243,7 +248,9 @@ def integrate_viralgenes_data_2_matrix(args, dfumi):
     # -- Edit header in the matrix file to have the correct new number of genes
     larray =lines[2].split(" ")
     larray[0]=len(gene_names)
+    larray[2] = len(lines)+len(counts4genes)-3
     lines[2]=" ".join(str(v) for v in larray)
+    lines[2]=lines[2]+"\n"
 
     # -- Load edited data into new matrix file 
     f_in = open(os.path.join(path10x,"outs",raw_folder,"matrix.mtx"), 'w')
