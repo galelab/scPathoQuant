@@ -25,10 +25,14 @@ def parse_arguments():
     parser.add_argument("-align", "--aligner", type=str, required=True, default="bbmap")
     parser.add_argument("-overwrite", "--overwrite_feature_matrix", required=False, action="store_true")
     parser.add_argument("--tmp_removal", required=False, action="store_true")
+    parser.add_argument("--bbmap_params",  nargs="+")
+    parser.add_argument("--bowtie2_params", nargs="+")
+
     return parser.parse_args()
 
 if __name__ == '__main__':
     args = parse_arguments()
+    print (args.bbmap_params)
     viable_cb = ex.extract_viable_10x(args.path10x)
     pr.process_unmapped_reads(args, viable_cb)
     mr.map2viralgenome(args)

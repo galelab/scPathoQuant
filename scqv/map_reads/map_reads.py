@@ -55,13 +55,29 @@ def map2viralgenome(args):
 
     # -- align reads 
     if args.aligner == "bowtie2":
-        arg=[os.path.join(bowtie2path, "bowtie2"), "-p", args.processors, "-q", os.path.join(args.output_path,"_tmp", "unmapped.fq"), "-x", os.path.join(args.path2genome,"genome"), "-S", os.path.join(args.output_path, "virus_al.sam")]
+        if args.bowtie2_params is None:
+            arg=[os.path.join(bowtie2path, "bowtie2"), "-p", args.processors, 
+            "-q", os.path.join(args.output_path,"_tmp", "unmapped.fq"), 
+            "-x", os.path.join(args.path2genome,"genome"), 
+            "-S", os.path.join(args.output_path, "virus_al.sam")]
+        else:
+            arg=[os.path.join(bowtie2path, "bowtie2"), "-p", args.processors, 
+            "-q", os.path.join(args.output_path,"_tmp", "unmapped.fq"), 
+            "-x", os.path.join(args.path2genome,"genome"), 
+            "-S", os.path.join(args.output_path, "virus_al.sam")] + args.bowtie2_params
+            
         ef._run_subprocesses(arg, "STATUS: Align reads bowtie2 global...", "aligning reads")
     elif args.aligner == "bbmap":
-        arg=[os.path.join(bbmap2path, "bbmap.sh"), "ref="+bbmapgenomefile, "in="+os.path.join(args.output_path,"_tmp", "unmapped.fq"), "nodisk=t" ,"local=f",
-            "covstats="+os.path.join(args.output_path, "constats.txt"), "covhist="+os.path.join(args.output_path,"covhist.txt"),
-            "basecov="+os.path.join(args.output_path,"basecov.txt"), "bincov="+os.path.join(args.output_path, "bincov.txt"),
-            "out="+os.path.join(args.output_path, "virus_al.sam")]
+        if args.bbmap_params is None:
+            arg=[os.path.join(bbmap2path, "bbmap.sh"), "ref="+bbmapgenomefile, "in="+os.path.join(args.output_path,"_tmp", "unmapped.fq"), "nodisk=t" ,"local=f",
+                "covstats="+os.path.join(args.output_path, "constats.txt"), "covhist="+os.path.join(args.output_path,"covhist.txt"), "minid=0.95",
+                "basecov="+os.path.join(args.output_path,"basecov.txt"), "bincov="+os.path.join(args.output_path, "bincov.txt"),
+                "out="+os.path.join(args.output_path, "virus_al.sam")]
+        else:
+            arg=[os.path.join(bbmap2path, "bbmap.sh"), "ref="+bbmapgenomefile, "in="+os.path.join(args.output_path,"_tmp", "unmapped.fq"), "nodisk=t" ,"local=f",
+                "covstats="+os.path.join(args.output_path, "constats.txt"), "covhist="+os.path.join(args.output_path,"covhist.txt"), "minid=0.95",
+                "basecov="+os.path.join(args.output_path,"basecov.txt"), "bincov="+os.path.join(args.output_path, "bincov.txt"),
+                "out="+os.path.join(args.output_path, "virus_al.sam")] + args.bbmap_params
         ef._run_subprocesses(arg, "STATUS: Align reads bbmap global...", "aligning reads")
     # elif args.aligner == "star":
     #     arg=[os.path.join(star2path, "STAR"), "--runThreadN",  args.processors, "--genomeDir", os.path.join(args.path2genome, "STAR_indicies"),
