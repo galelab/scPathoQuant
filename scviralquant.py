@@ -23,6 +23,10 @@ def parse_arguments():
     parser.add_argument("-p", "--processors", default=1)
     parser.add_argument("-p2genome", "--path2genome", type=str, required=True)
     parser.add_argument("-align", "--aligner", type=str, required=True, default="bbmap")
+    parser.add_argument("-in_filtered", "--input_filtered_folder", type=str, required=False, default="filtered_feature_bc_matrix")
+    parser.add_argument("-out_filtered", "--output_filtered_folder", type=str, required=False, default="filtered_feature_bc_matrix")
+    parser.add_argument("-in_raw", "--input_raw_folder", type=str, required=False, default="raw_feature_bc_matrix")
+    parser.add_argument("-out_raw", "--output_raw_folder", type=str, required=False, default="raw_feature_bc_matrix")
     parser.add_argument("-overwrite", "--overwrite_feature_matrix", required=False, action="store_true")
     parser.add_argument("--tmp_removal", required=False, action="store_true")
     parser.add_argument("--bbmap_params",  nargs="+")
@@ -32,7 +36,7 @@ def parse_arguments():
 
 if __name__ == '__main__':
     args = parse_arguments()
-    print (args.bbmap_params)
+    print(args.bbmap_params)
     viable_cb = ex.extract_viable_10x(args.path10x)
     pr.process_unmapped_reads(args, viable_cb)
     mr.map2viralgenome(args)
