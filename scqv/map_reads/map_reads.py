@@ -31,6 +31,8 @@ def map2viralgenome(args):
         files = glob.glob(os.path.join(args.path2genome,"*.bt2"))
         if len(files) == 0:
             files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
+            if len(files_genome)==0:
+                files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
             if len(files_genome) > 1:
                 print ("WARNING:  two fasta files in genome folder.")
             arg=[os.path.join(bowtie2path, "bowtie2-build"), files_genome[0], os.path.join(args.path2genome, "genome")]
@@ -40,10 +42,20 @@ def map2viralgenome(args):
             print("STATUS: bowtie2 indexes have already been made for this genome")
     elif args.aligner == "bbmap":
         files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
-        bbmapgenomefile = files_genome[0]
-    elif args.aligner == "star":
-        files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
-        genomefile = files_genome[0]
+        if (len(files_genome) > 0):
+            bbmapgenomefile = files_genome[0]
+        else:
+            files_genome = glob.glob(os.path.join(args.path2genome, "*.fna"))
+            if (len(files_genome) > 0):
+                bbmapgenomefile = files_genome[0]            
+    # elif args.aligner == "star":
+    #     files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
+    #     if (len(files_genome) > 0):
+    #         genomefile = files_genome[0]
+    #     else:
+    #         files_genome = glob.glob(os.path.join(args.path2genome, "*.fna"))
+    #         if (len(files_genome) > 0):
+    #             genomefile = files_genome[0]     
         # if os.path.isdir(os.path.join(args.path2genome, "STAR_indicies")) is False:
         #     arg=[os.path.join(star2path, "STAR"), "--runThreadN", args.processors, "--runMode", "genomeGenerate", 
         #         "--genomeDir", os.path.join(args.path2genome, "STAR_indicies"),"--genomeFastaFiles", genomefile]
