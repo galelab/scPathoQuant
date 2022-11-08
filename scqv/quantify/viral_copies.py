@@ -30,7 +30,11 @@ def _generate_viral_gtf(args):
     files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
     if len(files_genome) > 1:
         print ("WARNING:  too many fasta files in genome folder.")
-    
+    if len(files_genome)==0:
+        files_genome = glob.glob(os.path.join(args.path2genome, "*.fna"))
+        if len(files_genome) > 1:
+            print ("WARNING:  too many fasta files in genome folder.")
+        
     seq = read_FASTA(files_genome[0])
     if len(seq.keys()) == 1:
         for k, v in seq.items():
