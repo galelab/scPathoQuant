@@ -32,6 +32,7 @@ Set the following parameters
 * --bbmap_params = parameters specific to the bbmap alignment tool  
 * --bowtie2_params = parameters specific to the bowtie2 alignment tool
 * --tmp_removal = if specified will remove the temporary directory (_tmp/) of files used by scviralquant (these files can be large so if space is an issue these should be deleted)
+
 Example runs:
 ```bash 
  scviralquant.py -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder
