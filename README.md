@@ -11,7 +11,7 @@ scViralQuant is tested to work in python 3.6.8
 * scipy
 * seaborn
 
-Currently only set to run on linux
+Currently only set to run on linux & mac but has only been tested on a linux platform
 
 ### Installation
 ----------------
@@ -29,10 +29,21 @@ Set the following parameters
 * -p2genome = path/to/viral/fastafilefolder - in this folder should be at most 2 files 1) the fasta file with the viral genome sequence and 2) viral gtf file (not mandatory this can just run with fasta file with the viral genome).  Once bowtie2 indexes are made folder can be reused with out having to remake bowtie indexes.  Note: In the fasta file the header will be used to quantify the number of viral copies, it is recommended that if the fasta header is a complicated name it be simplified (i.e. > HIV_virus)
 * -align = alignment tool bbmap (default) or bowtie2
 * -overwrite = will overwrite the files directly in the 10x filtered_feature_bc_matrix folder.  If not specified a copy of this folder will be made and then information about viral count information will be added to the files in this copied folder 
+* --bbmap_params = parameters specific to the bbmap alignment tool  
+* --bowtie2_params = parameters specific to the bowtie2 alignment tool
 * --tmp_removal = if specified will remove the temporary directory (_tmp/) of files used by scviralquant (these files can be large so if space is an issue these should be deleted)
-Example run:
+Example runs:
 ```bash 
- scviralquant -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder
+ scviralquant.py -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder
+```
+```bash 
+ scviralquant.py -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder --tmp_removal
+```
+```bash 
+ scviralquant.py -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder --bbmap_params "--semiperfectmode"
+```
+```bash 
+ scviralquant.py -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder  -align bowtie2 --bowtie2_params "--very-sensitive  --non-deterministic"
 ```
 
 ### Output files 
