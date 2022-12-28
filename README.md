@@ -1,5 +1,5 @@
 # scViralQuant
-The goal of this python package is to accurately align and quantify viral reads for 10x single cell data.  This software integrates viral counts and viral gene counts into 10x files (features.tsv.gz and matrix.mtx.gz in the filtered_feature_bc_matrix folder) so that softwares such as seurat can be used to analyze data. The software uses outside software samtools, bowtie2, and htseq to quantify viral reads.  Default parameters are used when aligning reads to the viral genome and and non default htseq-count include using the --intersection-nonempty parameter.
+The goal of this python package is to accurately align and quantify viral reads for 10x single cell data.  This software integrates viral UMI counts and viral UMI gene counts into 10x files (features.tsv.gz and matrix.mtx.gz in the filtered_feature_bc_matrix and  raw_feature_bc_matrix folders) so that softwares such as seurat can be used to analyze data. The software uses outside software samtools, bowtie2, and htseq to quantify viral reads.  Default parameters are used when aligning reads to the viral genome and and non default htseq-count include using the --intersection-nonempty parameter.
 
 ### Dependencies
 ----------------
