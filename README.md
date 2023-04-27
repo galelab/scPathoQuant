@@ -35,16 +35,16 @@ Set the following parameters
 
 Example runs:
 ```bash 
- scviralquant.py -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder
+ scviralquant -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder
 ```
 ```bash 
- scviralquant.py -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder --tmp_removal
+ scviralquant -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder --tmp_removal
 ```
 ```bash 
- scviralquant.py -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder --bbmap_params "--semiperfectmode"
+ scviralquant -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder --bbmap_params "--semiperfectmode"
 ```
 ```bash 
- scviralquant.py -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder  -align bowtie2 --bowtie2_params "--very-sensitive  --non-deterministic"
+ scviralquant -10x Path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder  -align bowtie2 --bowtie2_params "--very-sensitive  --non-deterministic"
 ```
 
 ### Output files 
