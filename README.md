@@ -62,3 +62,7 @@ Output files by scViralQuant
 * virus_al_sort_counts.sam - htseq output reads mapping to virus
 * virus_genes_al_sort_counts.sam - htseq output reads mapping to individual virus genes (will not be produced if viral gtf is not provided)
 * Overwrites original 10x data provided to include viral counts and viral gene counts (if gtf file is provided)
+
+### LICENSE
+----------------
+BSD - 3-Clause Copyright 2023 University of Washington
