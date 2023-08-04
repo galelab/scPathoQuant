@@ -3,3 +3,4 @@ argparse
 htseq
 scipy
 seaborn
+setuptools>=59.0.0
