@@ -23,7 +23,7 @@ def parse_arguments():
     parser.add_argument("-op", "--output_path", default="output_scviralquant")
     parser.add_argument("-p", "--processors", default=1)
     parser.add_argument("-p2genome", "--path2genome", type=str, required=True)
-    parser.add_argument("-align", "--aligner", type=str, required=True, default="bbmap")
+    parser.add_argument("-align", "--aligner", type=str, default="bbmap")
     parser.add_argument("-in_filtered", "--input_filtered_folder", type=str, required=False, default="filtered_feature_bc_matrix")
     parser.add_argument("-out_filtered", "--output_filtered_folder", type=str, required=False, default="filtered_feature_bc_matrix")
     parser.add_argument("-in_raw", "--input_raw_folder", type=str, required=False, default="raw_feature_bc_matrix")
