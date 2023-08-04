@@ -16,6 +16,7 @@ Currently only set to run on linux & mac but has only been tested on a linux pla
 ### Installation
 ----------------
 ```bash
+cd ./scViralQuant
 python setup.py install
 ```
 
