@@ -1,0 +1,8 @@
+#define SAMTOOLS_VERSION "1.18"
+#define SAMTOOLS_CC "/share/tools/spack/opt/spack/linux-centos7-x86_64/gcc-11.2.0/llvm-12.0.1-ciifgdqg5kejnyejarkkag2shhiq5fxf/bin/clang"
+#define SAMTOOLS_CPPFLAGS ""
+#define SAMTOOLS_CFLAGS "-Wall -g -O2"
+#define SAMTOOLS_LDFLAGS ""
+#define SAMTOOLS_HTSDIR "htslib-1.18"
+#define SAMTOOLS_LIBS ""
+#define SAMTOOLS_CURSES_LIB "-lncursesw"
