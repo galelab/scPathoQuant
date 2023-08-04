@@ -67,9 +67,10 @@ Output files by scViralQuant
 
 ### Loading data with viral counts into Seurat 
 ----------------------------------------------
-Example seurat command 
-
+Example seurat command in R
+```bash 
 seurat.object.data <- Read10X(data.dir ="sampleofinterest/outs/filtered_feature_bc_matrix_bbmap")
+```
 
 ### LICENSE
 ----------------
