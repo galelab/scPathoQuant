@@ -9,6 +9,7 @@ scViralQuant is tested to work in python 3.6.8
 * htseq
 * pandas 
 * scipy
+* pysam
 * seaborn
 
 Currently only set to run on linux & mac but has only been tested on a linux platform
