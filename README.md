@@ -57,8 +57,11 @@ Example runs:
 Output files by scViralQuant
 
 * viral_copy.png - violin plot showing number of cells with virus and UMI counts 
-![Alt text](./viral_copy.png?raw=true "viral copy")
+<img src="./viral_copy.png?raw=true" width="128"/>
+
+#![Alt text](./viral_copy.png?raw=true "viral copy")
 * viral_genes.png - violin plot showing cells with viral gene UMI counts  
+<img src="./viral_genes.png?raw=true" width="128"/>
 * virus_al_counts.csv - total number of reads mapping to the virus in each cell 
 * virus_al_gene_counts.csv - number of reads mapping to viral genes in each cell 
 * virus_al.bam - reads mapped to virus (no unmapped reads)
