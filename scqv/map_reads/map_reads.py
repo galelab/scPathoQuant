@@ -18,7 +18,6 @@ if platform == "linux":
     # app_path = os.path.join(PATH, 'align', 'STAR')
     # os.environ["PATH"] += os.pathsep + app_path
     bowtie2path = os.path.join(PATH, "aligntools","bowtie2-2.4.2-linux-x86_64")
-    # samtoolspath = os.path.join(PATH, "extra_tools", "samtoolsv1.11_linux","bin")s
 elif platform == "OS":
     bowtie2path = os.path.join(PATH, "aligntools", "bowtie2-2.4.2-macos-x86_64")
     # star2path = os.path.join(PATH, "aligntools", "STAR-2.7.10a", "bin", "MacOSX_x86_64")
