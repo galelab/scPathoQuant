@@ -29,9 +29,19 @@ def map2viralgenome(args):
             files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
             if len(files_genome)==0:
                 files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
+                if (len(files_genome) > 0):
+                    bowtie2genomefile = files_genome[0]
+                else: 
+                    files_genome = glob.glob(os.path.join(args.path2genome, "*.fasta"))
+                    if (len(files_genome) > 0):
+                        bowtie2genomefile = files_genome[0]            
+                    else:
+                        files_genome = glob.glob(os.path.join(args.path2genome, "*.fna"))
+                        if (len(files_genome) > 0):
+                            bowtie2genomefile = files_genome[0]            
             if len(files_genome) > 1:
                 print ("WARNING:  two fasta files in genome folder.")
-            arg=[os.path.join(bowtie2path, "bowtie2-build"), files_genome[0], os.path.join(args.path2genome, "genome")]
+            arg=[os.path.join(bowtie2path, "bowtie2-build"), bowtie2genomefile, os.path.join(args.path2genome, "genome")]
             ef._run_subprocesses(arg, "STATUS: generating libraries bowtie2 ...", "extracting unmapped")
 
         else:
@@ -40,12 +50,16 @@ def map2viralgenome(args):
         files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
         if (len(files_genome) > 0):
             bbmapgenomefile = files_genome[0]
-        else:
-            files_genome = glob.glob(os.path.join(args.path2genome, "*.fna"))
+        else: 
+            files_genome = glob.glob(os.path.join(args.path2genome, "*.fasta"))
             if (len(files_genome) > 0):
                 bbmapgenomefile = files_genome[0]            
+            else:
+                files_genome = glob.glob(os.path.join(args.path2genome, "*.fna"))
+                if (len(files_genome) > 0):
+                    bbmapgenomefile = files_genome[0]            
     else:
-        raise ValueError(args.aligner+" not an available aligner specify star, bbmap or bowtie2, all lowercase")
+        raise ValueError(args.aligner+" not an available aligner specify bbmap or bowtie2, all lowercase")
 
     # -- align reads 
     if args.aligner == "bowtie2":
