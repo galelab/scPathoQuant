@@ -19,8 +19,11 @@ def quantify_reads(output_path,filename):
             if larray[-1] != "XF:Z:__no_feature" and larray[-1] !="XF:Z:__too_low_aQual":
                 if larray[-1].startswith("XF:Z:__ambiguous"):
                     pass
+                elif larray[-1].startswith("XF:Z:__not_aligned"):
+                    pass
                 else:
-                    reads_mapping[larray[0]]=re.sub("XF:\w+:", "", larray[-1])
+                    reads_mapping[larray[0]] = re.sub(
+                        "XF:\w+:", "", larray[-1])
 
     ## -- get umi and cell barcode information 
     if len(reads_mapping.keys()) > 0:
