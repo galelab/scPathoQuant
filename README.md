@@ -77,6 +77,12 @@ Example seurat command in R
 seurat.object.data <- Read10X(data.dir ="sampleofinterest/outs/filtered_feature_bc_matrix_bbmap")
 ```
 
+### CITATION
+-------------
+scViralQuant: A tool for efficient alignment and quantification of viral reads from 10x single cell sequencing data sets
+Leanne S. Whitmore, Jennifer Tisoncik-Go, Michael Gale Jr.
+bioRxiv 2023.07.21.549987; doi: https://doi.org/10.1101/2023.07.21.549987
+
 ### LICENSE
 ----------------
 BSD - 3-Clause Copyright 2023 University of Washington
