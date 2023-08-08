@@ -16,6 +16,8 @@ Currently only set to run on linux & mac but has only been tested on a linux pla
 
 ### Installation
 ----------------
+Go into downloaded scViralQuant downloaded and run the following commands
+
 ```bash
 cd ./scViralQuant
 pip install -r requirements.txt
