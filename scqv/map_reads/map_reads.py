@@ -34,11 +34,11 @@ def map2viralgenome(args):
                 else: 
                     files_genome = glob.glob(os.path.join(args.path2genome, "*.fasta"))
                     if (len(files_genome) > 0):
-                        bowtie2genomefile = files_genome[0]            
+                        bowtie2genomefile = files_genome[0]
                     else:
                         files_genome = glob.glob(os.path.join(args.path2genome, "*.fna"))
                         if (len(files_genome) > 0):
-                            bowtie2genomefile = files_genome[0]            
+                            bowtie2genomefile = files_genome[0]
             if len(files_genome) > 1:
                 print ("WARNING:  two fasta files in genome folder.")
             arg=[os.path.join(bowtie2path, "bowtie2-build"), bowtie2genomefile, os.path.join(args.path2genome, "genome")]
@@ -53,11 +53,11 @@ def map2viralgenome(args):
         else: 
             files_genome = glob.glob(os.path.join(args.path2genome, "*.fasta"))
             if (len(files_genome) > 0):
-                bbmapgenomefile = files_genome[0]            
+                bbmapgenomefile = files_genome[0]
             else:
                 files_genome = glob.glob(os.path.join(args.path2genome, "*.fna"))
                 if (len(files_genome) > 0):
-                    bbmapgenomefile = files_genome[0]            
+                    bbmapgenomefile = files_genome[0]
     else:
         raise ValueError(args.aligner+" not an available aligner specify bbmap or bowtie2, all lowercase")
 
