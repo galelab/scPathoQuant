@@ -99,4 +99,4 @@ def map2viralgenome(args):
     pysam.sort("-@", str(args.processors), os.path.join(args.output_path,"virus_al.bam"), "-o",  os.path.join(args.output_path,"virus_al_sort.bam"))
 
     print( "STATUS: generating bam index")
-    pysam.index("-@", str(args.processors), os.path.join(args.output_path,"virus_al_sort.bam"))
+    pysam.index( os.path.join(args.output_path,"virus_al_sort.bam"))
