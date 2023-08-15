@@ -3,6 +3,7 @@ The goal of this python package is to accurately align and quantify viral reads 
 
 ### Dependencies
 ----------------
+Make sure java is installed ( needed for bbmap install ) if not click [here](https://openjdk.org/install/) for installation
 scViralQuant is tested to work in python 3.6.8
 
 * argsparse
