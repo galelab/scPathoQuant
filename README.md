@@ -16,9 +16,11 @@ Currently only set to run on linux & mac but has only been tested on a linux pla
 
 ### Installation
 ----------------
+Make sure pip version is 21.3.1 or greater  
 Go into downloaded scViralQuant folder and run the following commands
 
 ```bash
+git clone https://github.com/galelab/scViralQuant.git
 cd ./scViralQuant
 pip install -r requirements.txt
 python setup.py install
