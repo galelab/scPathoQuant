@@ -12,15 +12,15 @@ import numpy as np
 import scqv.extra_functions as ef
 
 
-def integrate_data_2_matrix(args, dfumi, gene_name):
+def integrate_data_2_matrix(args, dfumidict, virus_names):
     path10x = args.path10x
 
     if args.overwrite_feature_matrix:
         filter_folder="filtered_feature_bc_matrix"
         raw_folder="raw_feature_bc_matrix"
     else:
-        filter_folder=args.output_filtered_folder+"_"+args.aligner
-        raw_folder=args.output_raw_folder+"_"+args.aligner
+        filter_folder=args.output_filtered_folder+"_scViralQuant_"+args.aligner
+        raw_folder=args.output_raw_folder+"_scViralQuant_"+args.aligner
         if os.path.isdir(os.path.join(path10x, "outs", filter_folder)) is False:
             shutil.copytree(os.path.join(path10x, "outs", args.input_filtered_folder), os.path.join(path10x, "outs", filter_folder), copy_function = shutil.copy)
         else:
@@ -38,18 +38,30 @@ def integrate_data_2_matrix(args, dfumi, gene_name):
 
     # --Load in features and barcode matricies 
     print ("STATUS: Integrating viral copy counts into 10x matrix and feature files in filter folder")
-    gene_names = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs", filter_folder, "features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
-    barcodes = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs", filter_folder, "barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
-
-    viralcopy = []
-
-    # --Put counts in to a list 
-    for i in dfumi.index.tolist():
-        count = dfumi.loc[i,'umi']
-        viralcopy.append([len(gene_names)+1, barcodes.index(i)+1, count])
+    feature_names_filtered = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs", filter_folder, "features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
+    barcodes_filtered = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs", filter_folder, "barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
+    # --Load in features and barcode matricies 
+    feature_names_raw = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs", raw_folder, "features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
+    barcodes_raw = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs", raw_folder, "barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
     
+    viralcopy_filtered = []
+    viralcopy_raw = []
+    # --Put counts in to a list 
+    viruswithcounts=[]
+    for virus_name, dfumi in dfumidict.items():
+        if dfumi.shape[0] > 0:
+            viruswithcounts.append(virus_name)
+            for i in dfumi.index.tolist():
+                count = dfumi.loc[i,'umi']
+                viralcopy_filtered.append([len(feature_names_filtered)+1, barcodes_filtered.index(i)+1, count])
+                viralcopy_raw.append([len(feature_names_raw)+1, barcodes_raw.index(i)+1, count])
+        else: 
+            print ("STATUS: Not adding counts for virus "+virus_name+" to matrix or feature files because there are no counts")
+
     # -- Fill list with gene names (for new features.tsv file)
-    gene_names.append((gene_name, gene_name, "Gene Expression"))
+    for virus_name in viruswithcounts:
+        feature_names_filtered.append((virus_name, virus_name, "Gene Expression"))
+        feature_names_raw.append((virus_name, virus_name, "Gene Expression"))
 
     # -- unzip matrix file so that it can be opened 
     arg=['gunzip', "-f", os.path.join(path10x,"outs",filter_folder,"matrix.mtx.gz")]
@@ -61,8 +73,8 @@ def integrate_data_2_matrix(args, dfumi, gene_name):
 
     # -- Edit header in the matrix file to have the correct new number of genes
     larray =lines[2].split(" ")
-    larray[0]=len(gene_names)
-    larray[2] = len(lines)+len(viralcopy)-3
+    larray[0]=len(feature_names_filtered)
+    larray[2] = len(lines)+len(viralcopy_filtered)-3
     lines[2]=" ".join(str(v) for v in larray)
     lines[2]=lines[2]+"\n"
 
@@ -70,7 +82,7 @@ def integrate_data_2_matrix(args, dfumi, gene_name):
     f_in = open(os.path.join(path10x,"outs",filter_folder,"matrix.mtx"), 'w')
     for line in lines:
         f_in.write(line)
-    for i in viralcopy:
+    for i in viralcopy_filtered:
         f_in.write(str(i[0])+" "+str(i[1])+" "+str(i[2])+"\n")
     f_in.close()
 
@@ -80,7 +92,7 @@ def integrate_data_2_matrix(args, dfumi, gene_name):
     
     # -- load new information into new features file 
     f_in = open(os.path.join(path10x,"outs",filter_folder,"features.tsv"), 'w')
-    for i in gene_names:
+    for i in feature_names_filtered:
         f_in.write(i[0]+"\t"+i[1]+"\t"+i[2]+"\n")
     f_in.close()
 
@@ -90,19 +102,6 @@ def integrate_data_2_matrix(args, dfumi, gene_name):
 
     #####-- add data to raw folder files--#####
     print ("STATUS: Integrating viral copy counts into 10x matrix and feature files in raw folder")
-    # --Load in features and barcode matricies 
-    gene_names = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs", raw_folder, "features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
-    barcodes = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs", raw_folder, "barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
-    
-    viralcopy = []
-
-    # --Put counts in to a list 
-    for i in dfumi.index.tolist():
-        count = dfumi.loc[i,'umi']
-        viralcopy.append([len(gene_names)+1, barcodes.index(i)+1, count])
-
-    # -- Fill list with gene names (for new features.tsv file)
-    gene_names.append((gene_name, gene_name, "Gene Expression"))
 
     # -- unzip matrix file so that it can be opened 
     arg=['gunzip', "-f", os.path.join(path10x,"outs",raw_folder,"matrix.mtx.gz")]
@@ -114,15 +113,15 @@ def integrate_data_2_matrix(args, dfumi, gene_name):
 
     # -- Edit header in the matrix file to have the correct new number of genes
     larray =lines[2].split(" ")
-    larray[0]=len(gene_names)
-    larray[2] = len(lines)+len(viralcopy)-3
+    larray[0]=len(feature_names_raw)
+    larray[2] = len(lines)+len(viralcopy_raw)-3
     lines[2]=" ".join(str(v) for v in larray)
     lines[2]=lines[2]+"\n"
     # -- Load edited data into new matrix file 
     f_in = open(os.path.join(path10x,"outs",raw_folder,"matrix.mtx"), 'w')
     for line in lines:
         f_in.write(line)
-    for i in viralcopy:
+    for i in viralcopy_raw:
         f_in.write(str(i[0])+" "+str(i[1])+" "+str(i[2])+"\n")
     f_in.close()
 
@@ -132,7 +131,7 @@ def integrate_data_2_matrix(args, dfumi, gene_name):
 
     # -- load new information into new features file 
     f_in = open(os.path.join(path10x,"outs",raw_folder,"features.tsv"), 'w')
-    for i in gene_names:
+    for i in feature_names_raw:
         f_in.write(i[0]+"\t"+i[1]+"\t"+i[2]+"\n")
     f_in.close()
 
@@ -140,15 +139,15 @@ def integrate_data_2_matrix(args, dfumi, gene_name):
     arg=['gzip', "-f", os.path.join(path10x,"outs",raw_folder,"features.tsv")]
     ef._run_subprocesses(arg, "STATUS: zipping new features files raw folder", "zipping new features file raw folder")
 
-def integrate_viralgenes_data_2_matrix(args, dfumi):
+def integrate_viralgenes_data_2_matrix(args, dfumidict):
     path10x = args.path10x
 
     if args.overwrite_feature_matrix:
         filter_folder="filtered_feature_bc_matrix"
         raw_folder="raw_feature_bc_matrix"
     else:
-        filter_folder="filtered_feature_bc_matrix_"+args.aligner
-        raw_folder="raw_feature_bc_matrix_"+args.aligner
+        filter_folder="filtered_feature_bc_matrix_"+"scViralQuant_"+args.aligner
+        raw_folder="raw_feature_bc_matrix_"+"scViralQuant_"+args.aligner
 
         if os.path.isdir(os.path.join(path10x, "outs", filter_folder)) is False:
            shutil.copytree(os.path.join(path10x, "outs", "filtered_feature_bc_matrix"), os.path.join(path10x, "outs", filter_folder), copy_function = shutil.copy)
@@ -158,24 +157,35 @@ def integrate_viralgenes_data_2_matrix(args, dfumi):
     #####-- add data to filter folder files --#####
     print ("STATUS: Integrating viral gene counts into 10x matrix and feature files in filter folders")
     # --Load in features and barcode matricies 
-    gene_names = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs",filter_folder,"features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
-    barcodes = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs",filter_folder,"barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
-
-    uniqgenes = set(dfumi['gene'].to_list())
-    counts4genes = list()
-    dfumi = dfumi.reset_index()
+    feature_names_filtered = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs",filter_folder,"features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
+    barcodes_filtered = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs",filter_folder,"barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
+    feature_names_raw = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs",raw_folder,"features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
+    barcodes_raw = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs",raw_folder,"barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
+    
+    counts4genes_filtered = list()
+    counts4genes_raw = list()
+    viruswithcounts=[]
+    uniqgenesfull=[]
     counter=0
-
-    # --Put counts in to a list 
-    for gene in uniqgenes:
-        dftemp =dfumi.loc[dfumi.gene==gene, ]  
-        counter=counter+1
-        for index, row in dftemp.iterrows(): 
-            counts4genes.append([len(gene_names)+counter, barcodes.index(row["cell_barcode"])+1, row["umi"]])
-
+    for virus_name, dfumi in dfumidict.items():
+        if dfumi is not False:
+            viruswithcounts.append(virus_name)
+            uniqgenes = set(dfumi['gene'].to_list())
+            uniqgenesfull.extend(uniqgenes)
+            dfumi = dfumi.reset_index()
+            # --Put counts in to a list 
+            for gene in uniqgenes:
+                dftemp =dfumi.loc[dfumi.gene==gene, ]  
+                counter=counter+1
+                for index, row in dftemp.iterrows(): 
+                    counts4genes_filtered.append([len(feature_names_filtered)+counter, barcodes_filtered.index(row["cell_barcode"])+1, row["umi"]])
+                    counts4genes_raw.append([len(feature_names_raw)+counter, barcodes_raw.index(row["cell_barcode"])+1, row["umi"]])
+        else: 
+            print("STATUS: no gene read counts for virus "+virus_name+" so not integrating info into matrix files")
     # -- Fill list with gene names (for new features.tsv file)
-    for gene in uniqgenes:
-        gene_names.append((gene, gene, "Gene Expression"))
+    for gene in uniqgenesfull:
+        feature_names_filtered.append((gene, gene, "Gene Expression"))
+        feature_names_raw.append((gene, gene, "Gene Expression"))
 
     # -- unzip matrix file so that it can be opened 
     arg=['gunzip', "-f", os.path.join(path10x,"outs",filter_folder,"matrix.mtx.gz")]
@@ -187,8 +197,8 @@ def integrate_viralgenes_data_2_matrix(args, dfumi):
 
     # -- Edit header in the matrix file to have the correct new number of genes
     larray =lines[2].split(" ")
-    larray[0]=len(gene_names)
-    larray[2] = len(lines)+len(counts4genes)-3
+    larray[0]=len(feature_names_filtered)
+    larray[2] = len(lines)+len(counts4genes_filtered)-3
     lines[2]=" ".join(str(v) for v in larray)
     lines[2]=lines[2]+"\n"
 
@@ -196,7 +206,7 @@ def integrate_viralgenes_data_2_matrix(args, dfumi):
     f_in = open(os.path.join(path10x,"outs",filter_folder,"matrix.mtx"), 'w')
     for line in lines:
         f_in.write(line)
-    for g in counts4genes:
+    for g in counts4genes_filtered:
         f_in.write(str(g[0])+" "+str(g[1])+" "+str(g[2])+"\n")
     f_in.close()
 
@@ -206,7 +216,7 @@ def integrate_viralgenes_data_2_matrix(args, dfumi):
 
     # -- load new information into new features file 
     f_in = open(os.path.join(path10x,"outs",filter_folder,"features.tsv"), 'w')
-    for i in gene_names:
+    for i in feature_names_filtered:
         f_in.write(i[0]+"\t"+i[1]+"\t"+i[2]+"\n")
     f_in.close()
 
@@ -216,26 +226,6 @@ def integrate_viralgenes_data_2_matrix(args, dfumi):
 
     #####--add data to raw folder files--#####
     print ("STATUS: Integrating viral gene counts into 10x matrix and feature files in raw folder")
-    
-    # --Load in features and barcode matricies 
-    gene_names = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs",raw_folder,"features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
-    barcodes = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs",raw_folder,"barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
-    
-    uniqgenes = set(dfumi['gene'].to_list())
-    counts4genes = list()
-    dfumi = dfumi.reset_index()
-    counter=0
-
-    # --Put counts in to a list 
-    for gene in uniqgenes:
-        dftemp =dfumi.loc[dfumi.gene==gene, ]  
-        counter=counter+1
-        for index, row in dftemp.iterrows(): 
-            counts4genes.append([len(gene_names)+counter, barcodes.index(row["cell_barcode"])+1, row["umi"]])
-
-    # -- Fill list with gene names (for new features.tsv file)
-    for gene in uniqgenes:
-        gene_names.append((gene, gene, "Gene Expression"))
 
     # -- unzip matrix file so that it can be opened 
     arg=['gunzip', "-f", os.path.join(path10x,"outs",raw_folder,"matrix.mtx.gz")]
@@ -247,8 +237,8 @@ def integrate_viralgenes_data_2_matrix(args, dfumi):
 
     # -- Edit header in the matrix file to have the correct new number of genes
     larray =lines[2].split(" ")
-    larray[0]=len(gene_names)
-    larray[2] = len(lines)+len(counts4genes)-3
+    larray[0]=len(feature_names_raw)
+    larray[2] = len(lines)+len(counts4genes_raw)-3
     lines[2]=" ".join(str(v) for v in larray)
     lines[2]=lines[2]+"\n"
 
@@ -256,7 +246,7 @@ def integrate_viralgenes_data_2_matrix(args, dfumi):
     f_in = open(os.path.join(path10x,"outs",raw_folder,"matrix.mtx"), 'w')
     for line in lines:
         f_in.write(line)
-    for g in counts4genes:
+    for g in counts4genes_raw:
         f_in.write(str(g[0])+" "+str(g[1])+" "+str(g[2])+"\n")
     f_in.close()
 
@@ -266,7 +256,7 @@ def integrate_viralgenes_data_2_matrix(args, dfumi):
 
     # -- load new information into new features file 
     f_in = open(os.path.join(path10x,"outs",raw_folder,"features.tsv"), 'w')
-    for i in gene_names:
+    for i in feature_names_filtered:
         f_in.write(i[0]+"\t"+i[1]+"\t"+i[2]+"\n")
     f_in.close()
 

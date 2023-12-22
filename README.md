@@ -3,8 +3,6 @@ The goal of this python package is to accurately align and quantify viral reads 
 
 ### Dependencies
 ----------------
-Make sure java is installed ( needed for bbmap aligner ) if not click [here](https://openjdk.org/install/) for installation
-
 scViralQuant is tested to work in python 3.6.8
 
 * argsparse
@@ -13,6 +11,10 @@ scViralQuant is tested to work in python 3.6.8
 * scipy
 * pysam
 * seaborn
+* setuptools>=59.0.0
+* GFFUtils
+* deepTools
+* pyGenomeTracks
 
 Currently only set to run on linux & mac but has only been tested on a linux platform
 
@@ -66,17 +68,20 @@ Output files by scViralQuant
 * viral_genes.png - violin plot showing cells with viral gene UMI counts  
 <img src="./viral_genes.png?raw=true" width="400"/>
 
+* coveragemap.png - violin plot showing cells with viral gene UMI counts  
+<img src="./coveragemap.png?raw=true" width="300"/>
+
 * virus_al_counts.csv - total number of reads mapping to the virus in each cell 
 * virus_al_gene_counts.csv - number of reads mapping to viral genes in each cell 
-* virus_al.bam - reads mapped to virus (no unmapped reads)
+* virus_al.bam - reads mapped to virus
 * virus_al_mapped.sam - reads mapped to only virus (no unmapped reads)
-* virus_al_sort.bam - sorted reads mapped to virus 
-* virus_al_sort.bam.bai - index file to virus_al_sort.bam
+* virus_al_mapped_sort.bam - sorted reads mapped to virus 
+* virus_al_mapped_sort.bam.bai - index file to virus_al_sort.bam
 * virus_al_sort_counts.sam - htseq output reads mapping to virus
 * virus_genes_al_sort_counts.sam - htseq output reads mapping to individual virus genes (will not be produced if viral gtf is not provided)
 * Overwrites original 10x data provided to include viral counts and viral gene counts (if gtf file is provided)
-* Path/to/10x/sample/outs/filtered_feature_bc_matrix_bbmap - files that can be integrated into seurat with viral counts 
-* Path/to/10x/sample/outs/raw_feature_bc_matrix_bbmap - files that can be integrated into seurat with viral counts (this is not always needed)
+* Path/to/10x/sample/outs/filtered_feature_bc_matrix_scViralQuant_bbmap - files that can be integrated into seurat with viral counts 
+* Path/to/10x/sample/outs/raw_feature_bc_matrix_scViralQuant_bbmap - files that can be integrated into seurat with viral counts (this is not always needed)
 
 ### Loading data with viral counts into Seurat 
 ----------------------------------------------

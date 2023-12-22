@@ -5,3 +5,6 @@ scipy
 seaborn
 pysam
 setuptools>=59.0.0
+GFFUtils
+deepTools
+pyGenomeTracks

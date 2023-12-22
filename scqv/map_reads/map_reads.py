@@ -20,44 +20,36 @@ elif platform == "OS":
 else:
     ValueError("Program wont run on this operating system "+platform)
 
+def _get_genome_file(args):
+    files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
+    if (len(files_genome)== 0):
+        files_genome = glob.glob(os.path.join(args.path2genome, "*.fasta"))
+        if (len(files_genome) == 0):
+            files_genome = glob.glob(os.path.join(args.path2genome, "*.fna"))
+            if (len(files_genome) == 0):
+                AssertionError("NO GENOME FILE WAS FOUND, NEEDS TO END IN .fa, .fasta, or .fna")
+    return(files_genome)
+
 def map2viralgenome(args):
 
     # -- check if libraries are present if not generate 
     if args.aligner == "bowtie2":
         files = glob.glob(os.path.join(args.path2genome,"*.bt2"))
         if len(files) == 0:
-            files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
-            if len(files_genome)==0:
-                files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
-                if (len(files_genome) > 0):
-                    bowtie2genomefile = files_genome[0]
-                else: 
-                    files_genome = glob.glob(os.path.join(args.path2genome, "*.fasta"))
-                    if (len(files_genome) > 0):
-                        bowtie2genomefile = files_genome[0]
-                    else:
-                        files_genome = glob.glob(os.path.join(args.path2genome, "*.fna"))
-                        if (len(files_genome) > 0):
-                            bowtie2genomefile = files_genome[0]
+            files_genome = _get_genome_file(args)
+            bowtie2genomefile = files_genome[0]
             if len(files_genome) > 1:
-                print ("WARNING:  two fasta files in genome folder.")
+                print("WARNING:  two fasta files in genome folder using this one "+files_genome[0])
             arg=[os.path.join(bowtie2path, "bowtie2-build"), bowtie2genomefile, os.path.join(args.path2genome, "genome")]
             ef._run_subprocesses(arg, "STATUS: generating libraries bowtie2 ...", "extracting unmapped")
 
         else:
             print("STATUS: bowtie2 indexes have already been made for this genome")
     elif args.aligner == "bbmap":
-        files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
-        if (len(files_genome) > 0):
-            bbmapgenomefile = files_genome[0]
-        else: 
-            files_genome = glob.glob(os.path.join(args.path2genome, "*.fasta"))
-            if (len(files_genome) > 0):
-                bbmapgenomefile = files_genome[0]
-            else:
-                files_genome = glob.glob(os.path.join(args.path2genome, "*.fna"))
-                if (len(files_genome) > 0):
-                    bbmapgenomefile = files_genome[0]
+        files_genome = _get_genome_file(args)
+        bbmapgenomefile = files_genome[0]
+        if len(files_genome) > 1:
+            print("WARNING:  two fasta files in genome folder using this one "+files_genome[0])
     else:
         raise ValueError(args.aligner+" not an available aligner specify bbmap or bowtie2, all lowercase")
 
@@ -93,10 +85,11 @@ def map2viralgenome(args):
     pysam.view("-@", str(args.processors),"-S", "-b", os.path.join(args.output_path,"virus_al.sam"), "-o", os.path.join(args.output_path, "virus_al.bam"), catch_stdout=False)
 
     print("STATUS: Converting mapped reads to from bam to sam file")
-    pysam.view("-@", str(args.processors), "-h", os.path.join(args.output_path, "virus_al.bam"), "-o",  os.path.join(args.output_path, "virus_al_mapped.sam"), catch_stdout=False)
+    pysam.view("-@", str(args.processors),  "-b", "-F", "4", os.path.join(args.output_path, "virus_al.bam"), "-o",  os.path.join(args.output_path, "virus_al_mapped.sam"), catch_stdout=False)
 
     print("STATUS: Sorting bam")
-    pysam.sort("-@", str(args.processors), os.path.join(args.output_path,"virus_al.bam"), "-o",  os.path.join(args.output_path,"virus_al_sort.bam"))
+    pysam.sort("-@", str(args.processors), "-o", os.path.join(args.output_path,"virus_al_mapped_sort.bam"), 
+            os.path.join(args.output_path,"virus_al_mapped.sam"))
 
     print( "STATUS: generating bam index")
-    pysam.index( os.path.join(args.output_path,"virus_al_sort.bam"))
+    pysam.index( os.path.join(args.output_path,"virus_al_mapped_sort.bam"))
