@@ -47,8 +47,9 @@ if __name__ == '__main__':
         viz.generate_coverage_maps(args, dfvc)
     integrate.integrate_data_2_matrix(args, dfvc, virus_names)
     dfgenes = vg.htseq_run(args, virus_names)
-    if args.vizualization:
-        viz.generate_viral_gene_plots(args, dfgenes)
+    if dfgenes is not False:
+        if args.vizualization:
+            viz.generate_viral_gene_plots(args, dfgenes)
     integrate.integrate_viralgenes_data_2_matrix(args, dfgenes)
     if args.tmp_removal:
         shutil.rmtree(os.path.join(args.output_path,"_tmp"))
