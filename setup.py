@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-setup(name="scViralQuant",
+setup(name="scPathoQuant",
       version="1.0.0",
       description="The goal of this package is to accurately align and quantify viral reads for 10x single cell data. \
                    This software integrates viral counts and viral gene counts into 10x files (features.tsv.gz and matrix.mtx.gz \
@@ -8,7 +8,7 @@ setup(name="scViralQuant",
       author=["Leanne Whitmore"],
       author_email=["leanne382@gmail.com"],
       platforms=["linux"],
-      keywords='single-cell, viral, quantification',
+      keywords='single-cell, viral/pathogen, quantification',
       packages=find_packages(),
       install_requires=[
           'argparse',
@@ -20,6 +20,6 @@ setup(name="scViralQuant",
       include_package_data=True,
       zip_safe=False,
       scripts=[
-          'scviralquant',
+          'scpathoquant',
       ]
 )
