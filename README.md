@@ -89,6 +89,9 @@ Example seurat command in R
 ```bash 
 seurat.object.data <- Read10X(data.dir ="Path/to/10x/sample/outs/filtered_feature_bc_matrix_scPathoQuant_bbmap")
 ```
+### Examples run codes 
+----------------------
+Example and test scPathoQuant codes can be found [here](https://github.com/galelab/Whitmore_scPathoQuant_testSets)
 
 ### CITATION
 -------------
