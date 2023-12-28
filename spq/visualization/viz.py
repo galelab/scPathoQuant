@@ -58,8 +58,8 @@ def generate_viral_gene_plots(args, dfumidict):
             g.subplots_adjust(left=0.2,bottom=0.5)
             g.set_figheight(4)
             g.set_figwidth(6)
-            g.savefig(os.path.join(args.output_path, "viral_genes_"+virusname_rename+".png"), dpi=500)
-            g.savefig(os.path.join(args.output_path, "viral_genes_"+virusname_rename+".svg"), dpi=500)
+            g.savefig(os.path.join(args.output_path, "pathogen_genes_"+virusname_rename+".png"), dpi=500)
+            g.savefig(os.path.join(args.output_path, "pathogen_genes_"+virusname_rename+".svg"), dpi=500)
 
     else:
         print ("STATUS: No cells have viral "+virusname_rename+" gene read counts not generating violin plot for viral genes")
@@ -75,11 +75,11 @@ def generate_coverage_maps(args, dfumidict):
         if dfumi.shape[0] > 0:
             length_genome = len(seq[virus_name])
 
-            pysam.view("-@", str(args.processors), "-b",  os.path.join(args.output_path, "virus_al_mapped_sort.bam"), 
-                    virus_name, "-o",  os.path.join(args.output_path, "virus_al_mapped_sort_"+virus_name+".bam"), catch_stdout=False)
-            pysam.index(os.path.join(args.output_path, "virus_al_mapped_sort_"+virus_name+".bam"))
+            pysam.view("-@", str(args.processors), "-b",  os.path.join(args.output_path, "pathogen_al_mapped_sort.bam"), 
+                    virus_name, "-o",  os.path.join(args.output_path, "pathogen_al_mapped_sort_"+virus_name+".bam"), catch_stdout=False)
+            pysam.index(os.path.join(args.output_path, "pathogen_al_mapped_sort_"+virus_name+".bam"))
 
-            arg=["bamCoverage", "-b", os.path.join(args.output_path, "virus_al_mapped_sort_"+virus_name+".bam"), 
+            arg=["bamCoverage", "-b", os.path.join(args.output_path, "pathogen_al_mapped_sort_"+virus_name+".bam"), 
                     "-o", os.path.join(args.output_path, "coverage_"+virus_name+".bw")]
             ef._run_subprocesses(arg, "STATUS: Generating bigWig file...", "generating bigWig")
 
@@ -134,4 +134,4 @@ def generate_coverage_maps(args, dfumidict):
                     os.path.join(args.output_path, virus_name+"_coveragemap.png")]
                 ef._run_subprocesses(argu, "STATUS: Generating png coverage map...", "generating png coverage map")
         else:
-            print ("STATUS: "+virus_name+" No cells have viral reads not generating coverage plot")
+            print ("STATUS: "+virus_name+" No cells have pathogen reads reads not generating coverage plot")
