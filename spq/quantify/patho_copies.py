@@ -69,7 +69,7 @@ def quantify_reads(output_path,filename, virus_names):
         krename = re.sub("\/", "_",k )
         df1 = df[df['read'].isin(t)]
         df_reads = df1.groupby(['cell_barcode', 'umi']).count()
-        df_reads.to_csv(os.path.join(output_path, "vpathogen_al_umi_read_counts_"+krename+".csv"))
+        df_reads.to_csv(os.path.join(output_path, "pathogen_al_umi_read_counts_"+krename+".csv"))
         df_reads = df_reads.reset_index()
         df_umi = df_reads[["cell_barcode", "umi"]].groupby(["cell_barcode"]).count()
         df_umi.to_csv(os.path.join(output_path, "pathogen_al_counts_"+krename+".csv"))
