@@ -37,7 +37,7 @@ def integrate_data_2_matrix(args, dfumidict, virus_names):
     #####-- add data to filter folder files --#####
 
     # --Load in features and barcode matricies 
-    print ("STATUS: Integrating viral copy counts into 10x matrix and feature files in filter folder")
+    print ("STATUS: Integrating pathogen copy counts into 10x matrix and feature files in filter folder")
     feature_names_filtered = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs", filter_folder, "features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
     barcodes_filtered = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs", filter_folder, "barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
     # --Load in features and barcode matricies 
@@ -56,7 +56,7 @@ def integrate_data_2_matrix(args, dfumidict, virus_names):
                 viralcopy_filtered.append([len(feature_names_filtered)+1, barcodes_filtered.index(i)+1, count])
                 viralcopy_raw.append([len(feature_names_raw)+1, barcodes_raw.index(i)+1, count])
         else: 
-            print ("STATUS: Not adding counts for virus "+virus_name+" to matrix or feature files because there are no counts")
+            print ("STATUS: Not adding counts for pathogen "+virus_name+" to matrix or feature files because there are no counts")
 
     # -- Fill list with gene names (for new features.tsv file)
     for virus_name in viruswithcounts:
@@ -101,7 +101,7 @@ def integrate_data_2_matrix(args, dfumidict, virus_names):
     ef._run_subprocesses(arg, "STATUS: zipping new features files filter folder", "zipping new features file filter folder")
 
     #####-- add data to raw folder files--#####
-    print ("STATUS: Integrating viral copy counts into 10x matrix and feature files in raw folder")
+    print ("STATUS: Integrating pathogen copy counts into 10x matrix and feature files in raw folder")
 
     # -- unzip matrix file so that it can be opened 
     arg=['gunzip', "-f", os.path.join(path10x,"outs",raw_folder,"matrix.mtx.gz")]
@@ -155,7 +155,7 @@ def integrate_pathogenes_data_2_matrix(args, dfumidict):
            shutil.copytree(os.path.join(path10x, "outs", "raw_feature_bc_matrix"), os.path.join(path10x,  "outs", raw_folder), copy_function = shutil.copy)
 
     #####-- add data to filter folder files --#####
-    print ("STATUS: Integrating viral gene counts into 10x matrix and feature files in filter folders")
+    print ("STATUS: Integrating pathogen gene counts into 10x matrix and feature files in filter folders")
     # --Load in features and barcode matricies 
     feature_names_filtered = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs",filter_folder,"features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
     barcodes_filtered = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs",filter_folder,"barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
@@ -225,7 +225,7 @@ def integrate_pathogenes_data_2_matrix(args, dfumidict):
     ef._run_subprocesses(arg, "STATUS: zipping new features file in feature folder", "zipping new features file in feature folder")
 
     #####--add data to raw folder files--#####
-    print ("STATUS: Integrating viral gene counts into 10x matrix and feature files in raw folder")
+    print ("STATUS: Integrating pathogen gene counts into 10x matrix and feature files in raw folder")
 
     # -- unzip matrix file so that it can be opened 
     arg=['gunzip', "-f", os.path.join(path10x,"outs",raw_folder,"matrix.mtx.gz")]
