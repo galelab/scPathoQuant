@@ -39,9 +39,7 @@ def quantify_reads(output_path,filename, virus_names):
             df1 = df1.set_index('read')
             df1 = pd.concat([df1, tmpdf],  axis=1, join="inner")
             df1 = df1.reset_index() 
-            print (df1)
             df1 = df1.rename(columns={"index":"read", 0: "gene"})
-            print (df1)
             df2 = df1.groupby(['cell_barcode', 'umi', 'gene']).agg({'gene': lambda x: ','.join(x)})
             df2.columns = ['combined_genes']
             df2 = df2.reset_index()
