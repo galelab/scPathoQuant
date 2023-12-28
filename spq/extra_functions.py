@@ -17,8 +17,8 @@ def _run_subprocesses(args, status, error_message, verbose=False):
     print(status)
     stdoutdata, stderrdata = process.communicate()
     # if verbose is True:
-    print (stdoutdata)
-    print (stderrdata)
-    print (process.returncode)
+    # print (stdoutdata)
+    # print (stderrdata)
+    # print (process.returncode)
     _check_subprocess_run(process.returncode, stderrdata, error_message)
 
