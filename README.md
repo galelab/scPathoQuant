@@ -75,7 +75,7 @@ Output files by scPathoQuant
 * pathogen_al_gene_counts.csv - number of reads mapping to pathoen genes in each cell 
 * pathogen_al.bam - reads mapped to pathogen
 * pathogen_al_mapped.sam - reads mapped to only pathogen (no unmapped reads)
-* pathogen_al_mapped_sort.bam - sorted reads mapped to pathogen 
+* pathogen_al_mapped_sort.bam - sorted reads mapped to pathogen (can be used to visualize reads in [IGV](https://www.igv.org/))
 * pathogen_al_mapped_sort.bam.bai - index file to pathogen_al_sort.bam
 * pathogen_al_sort_counts.sam - htseq output reads mapping to pathogen
 * pathogen_genes_al_sort_counts.sam - htseq output reads mapping to individual pathogen genes (will not be produced if pathogen/viral gtf is not provided)
@@ -91,7 +91,7 @@ seurat.object.data <- Read10X(data.dir ="Path/to/10x/sample/outs/filtered_featur
 ```
 ### Examples run codes 
 ----------------------
-Example and test scPathoQuant codes can be found [here](https://github.com/galelab/Whitmore_scPathoQuant_testSets)
+Examples and test data sets and codes for scPathoQuant can be found [here](https://github.com/galelab/Whitmore_scPathoQuant_testSets)
 
 ### CITATION
 -------------
