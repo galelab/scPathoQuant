@@ -81,7 +81,7 @@ def htseq_run(args, virus_names):
         print ("STATUS: No gtf file not counting reads for individual pathogen genes")
         return False
     elif len(files_gtf) ==1:
-        arg=["htseq-count", "--format=bam", "--mode=intersection-nonempty", "--idattr=gene_id", os.path.join(args.output_path, "virus_al_mapped_sort.bam"),
+        arg=["htseq-count", "--format=bam", "--mode=intersection-nonempty", "--idattr=gene_id", os.path.join(args.output_path, "pathogen_al_mapped_sort.bam"),
             files_gtf[0], "--samout="+os.path.join(args.output_path,"pathogen_genes_al_sort_counts.sam")]
         ef._run_subprocesses(arg, "STATUS: running htseq for pathogen genes ", "running htseq for pathogen genes")
         dfumi = quantify_reads(args.output_path, os.path.join(args.output_path, "pathogen_genes_al_sort_counts.sam"), virus_names)
