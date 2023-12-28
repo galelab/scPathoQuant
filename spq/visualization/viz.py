@@ -29,6 +29,7 @@ def generate_viral_copy_plots(args, dfumidict):
     print ("STATUS: Generating violin plots for viral copies")
     for virus_name, dfumi in dfumidict.items():
         if dfumi.shape[0] > 0:
+            virusname_rename = re.sub("\/", "_", virus_name )
             sns.set_theme(style="whitegrid")
             dfumi[virus_name]=[virus_name]*dfumi.shape[0]
             ax = sns.violinplot(x=virus_name, y="umi",data=dfumi)
@@ -37,8 +38,8 @@ def generate_viral_copy_plots(args, dfumidict):
             g.subplots_adjust(left=0.2)
             g.set_figheight(4)
             g.set_figwidth(4)
-            g.savefig(os.path.join(args.output_path, "viral_copy_"+virus_name+".png"), dpi=500)
-            g.savefig(os.path.join(args.output_path, "viral_copy_"+virus_name+".svg"), dpi=500)
+            g.savefig(os.path.join(args.output_path, "pathogen_copy_"+virusname_rename+".png"), dpi=500)
+            g.savefig(os.path.join(args.output_path, "pathogen_copy_"+virusname_rename+".svg"), dpi=500)
 
         else:
             print ("STATUS: "+virus_name+" No cells have viral reads not generating violin plot")
