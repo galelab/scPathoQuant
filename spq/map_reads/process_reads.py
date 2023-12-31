@@ -42,20 +42,12 @@ def process_unmapped_reads(args, viable_cb):
             fout.write("cell_barcode,umi,read\n")
             with open(os.path.join(args.output_path,"_tmp","unmapped.sam")) as fin:
                 for line in fin:
-                    if line.startswith("@"):
-                        pass
-                    else: 
+                    if not line.startswith("@"):
                         line = line.strip()
                         larray = line.split("\t")
-                        cellbarcode=False
-                        umi=False
-                        for i in larray:
-                            if i.startswith("CB"):
-                                cellbarcode=i
-                            elif i.startswith("UB"):
-                                umi=i
-                        if cellbarcode != False and umi != False and re.sub("CB:Z:", "", cellbarcode) in viable_cb: 
-                            fout.write(re.sub("CB:Z:", "", cellbarcode)+","+re.sub("UB:Z:", "", umi)+","+larray[0]+"\n")
+                        if larray[-1].startswith("UB") and larray[-4].startswith("CB"):
+                            if re.sub("CB:Z:", "", larray[-4]) in viable_cb: 
+                                fout.write(re.sub("CB:Z:", "", larray[-4])+","+re.sub("UB:Z:", "", larray[-1])+","+larray[0]+"\n")
 
         # -- convert to fastq file
         pysam.bam2fq('-n', '-0', os.path.join(args.output_path, "_tmp", "unmapped.fq"), os.path.join(args.output_path,"_tmp","unmapped.bam"),  catch_stdout=False)
