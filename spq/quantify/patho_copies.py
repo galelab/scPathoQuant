@@ -67,6 +67,7 @@ def quantify_reads(output_path,filename, virus_names):
     df = pd.read_csv(os.path.join(output_path,"_tmp", "barcode_umi_read_table.csv"))
     for k, t in reads_mapping.items():
         krename = re.sub("\/", "_",k )
+        krename = re.sub(" ", "_",krename )
         df1 = df[df['read'].isin(t)]
         df_reads = df1.groupby(['cell_barcode', 'umi']).count()
         df_reads.to_csv(os.path.join(output_path, "pathogen_al_umi_read_counts_"+krename+".csv"))

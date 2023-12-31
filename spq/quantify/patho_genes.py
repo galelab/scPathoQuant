@@ -33,6 +33,8 @@ def quantify_reads(output_path,filename, virus_names):
     dfumiall = dict()
     for k, t in reads_mapping.items():
         if len(t.keys()) > 0:
+            krename = re.sub("\/", "_",k )
+            krename = re.sub(" ", "_",krename)
             tmpdf = pd.DataFrame.from_dict(t,orient='index')   
             df = pd.read_csv(os.path.join(output_path,"_tmp", "barcode_umi_read_table.csv"))
             df1 = df[df['read'].isin(t.keys())]
@@ -52,20 +54,20 @@ def quantify_reads(output_path,filename, virus_names):
                 print ("STATUS: Dropping "+str(len(drop_reads))+" UMIs because of inconsistent gene annotations")
                 df2 = df2.drop(drop_reads)
             if df2.empty:
-                print("STATUS: no reads able to be quantified for pathogen genes for "+k+" will not add genes to 10x filtered files")
+                print("STATUS: no reads able to be quantified for pathogen genes for "+krename+" will not add genes to 10x filtered files")
                 dfumiall[k]=False
             else:
                 df_umi = df2[["cell_barcode", "umi", "gene"]].groupby(["cell_barcode", "gene"]).count()
                 df_umi = df_umi.reset_index()
                 df_umi = df_umi.set_index('cell_barcode')
-                df_umi.to_csv(os.path.join(output_path, "pathogen_al_gene_counts_"+k+".csv"))
+                df_umi.to_csv(os.path.join(output_path, "pathogen_al_gene_counts_"+krename+".csv"))
                 dfumiall[k]=  df_umi
                 
         else: 
             print("STATUS: no reads mapping to pathogen genes.. will not add genes to 10x filtered files")
             df_umi = pd.DataFrame(columns=["cell_barcode", "gene", "umi"])
             df_umi = df_umi.set_index('cell_barcode')
-            df_umi.to_csv(os.path.join(output_path, "pathogen_al_gene_counts_"+k+".csv"))
+            df_umi.to_csv(os.path.join(output_path, "pathogen_al_gene_counts_"+krename+".csv"))
             dfumiall[k]=False
     return(dfumiall)
 

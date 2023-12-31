@@ -30,6 +30,7 @@ def generate_viral_copy_plots(args, dfumidict):
     for virus_name, dfumi in dfumidict.items():
         if dfumi.shape[0] > 0:
             virusname_rename = re.sub("\/", "_", virus_name )
+            virusname_rename = re.sub(" ", "_",virusname_rename)
             sns.set_theme(style="whitegrid")
             dfumi[virus_name]=[virus_name]*dfumi.shape[0]
             ax = sns.violinplot(x=virus_name, y="umi",data=dfumi)
@@ -51,6 +52,7 @@ def generate_viral_gene_plots(args, dfumidict):
             sns.set_theme(style="whitegrid")
             # dfumi[gene_name]=[gene_name]*dfumi.shape[0]
             virusname_rename = re.sub("\/", "_", virus_name )
+            virusname_rename = re.sub(" ", "_",virusname_rename)
             ax = sns.violinplot(x="gene", y="umi",data=dfumi)
             xlabels = ax.get_xticklabels()
             ax.set_xticklabels(labels=xlabels, rotation=90)
@@ -75,13 +77,14 @@ def generate_coverage_maps(args, dfumidict):
     for virus_name, dfumi in dfumidict.items():
         if dfumi.shape[0] > 0:
             length_genome = len(seq[virus_name])
-
+            krename = re.sub("\/", "_",virus_name )
+            krename = re.sub(" ", "_",krename)
             pysam.view("-@", str(args.processors), "-b",  os.path.join(args.output_path, "pathogen_al_mapped_sort.bam"), 
-                    virus_name, "-o",  os.path.join(args.output_path, "pathogen_al_mapped_sort_"+virus_name+".bam"), catch_stdout=False)
-            pysam.index(os.path.join(args.output_path, "pathogen_al_mapped_sort_"+virus_name+".bam"))
+                    virus_name, "-o",  os.path.join(args.output_path, "pathogen_al_mapped_sort_"+krename+".bam"), catch_stdout=False)
+            pysam.index(os.path.join(args.output_path, "pathogen_al_mapped_sort_"+krename+".bam"))
 
-            arg=["bamCoverage", "-b", os.path.join(args.output_path, "pathogen_al_mapped_sort_"+virus_name+".bam"), 
-                    "-o", os.path.join(args.output_path, "coverage_"+virus_name+".bw")]
+            arg=["bamCoverage", "-b", os.path.join(args.output_path, "pathogen_al_mapped_sort_"+krename+".bam"), 
+                    "-o", os.path.join(args.output_path, "coverage_"+krename+".bw")]
             ef._run_subprocesses(arg, "STATUS: Generating bigWig file...", "generating bigWig")
 
             files_gtf = glob.glob(os.path.join(args.path2genome, "*.gtf"))
@@ -98,41 +101,41 @@ def generate_coverage_maps(args, dfumidict):
                 r = subprocess.call(cmd, shell=True)  
                 ef._check_subprocess_run(r,r, "gtf 2 bed conversion")
                 print("STATUS: generating coverage map...")
-                argu=["make_tracks_file", "--trackFile",  os.path.join(args.output_path, "genes_"+virus_name+".bed"), 
-                    os.path.join(args.output_path,"coverage_"+virus_name+".bw"),
-                    "-o", os.path.join(args.output_path, "tracks_"+virus_name+".ini")]
-                ef._run_subprocesses(argu, "STATUS: Generating track ini file...", "generating tracks_"+virus_name+".ini")
+                argu=["make_tracks_file", "--trackFile",  os.path.join(args.output_path, "genes_"+krename+".bed"), 
+                    os.path.join(args.output_path,"coverage_"+krename+".bw"),
+                    "-o", os.path.join(args.output_path, "tracks_"+krename+".ini")]
+                ef._run_subprocesses(argu, "STATUS: Generating track ini file...", "generating tracks_"+krename+".ini")
                 
-                process_ini_file(args, os.path.join(args.output_path, "tracks_"+virus_name+".ini"))
+                process_ini_file(args, os.path.join(args.output_path, "tracks_"+krename+".ini"))
 
-                argu=["pyGenomeTracks", "--tracks", os.path.join(args.output_path,"tracks_"+virus_name+"edit.ini"),
+                argu=["pyGenomeTracks", "--tracks", os.path.join(args.output_path,"tracks_"+krename+"edit.ini"),
                     "--region", str(virus_name)+":"+str(1)+"-"+str(length_genome), "--dpi", "200", "--outFileName",
-                    os.path.join(args.output_path, virus_name+"_coveragemap.pdf")]
+                    os.path.join(args.output_path, krename+"_coveragemap.pdf")]
                 ef._run_subprocesses(argu, "STATUS: Generating pdf coverage map...", "generating pdf coverage map")
 
-                argu=["pyGenomeTracks", "--tracks", os.path.join(args.output_path, "tracks_"+virus_name+"edit.ini"),
+                argu=["pyGenomeTracks", "--tracks", os.path.join(args.output_path, "tracks_"+krename+"edit.ini"),
                     "--region", str(virus_name)+":"+str(1)+"-"+str(length_genome), "--dpi", "200", "--outFileName",
-                    os.path.join(args.output_path, virus_name+"_coveragemap.png")]
+                    os.path.join(args.output_path, krename+"_coveragemap.png")]
                 ef._run_subprocesses(argu, "STATUS: Generating png coverage map...", "generating png coverage map")
             
             else: 
                 print("STATUS: number gtf files is "+str(len(files_gtf))+" not incoroporating track info from gtf")
 
                 print("STATUS: generating coverage map...")
-                argu=["make_tracks_file", "--trackFile",  os.path.join(args.output_path, "coverage_"+virus_name+".bw"),
-                    "-o", os.path.join(args.output_path, "tracks_"+virus_name+".ini")]
-                ef._run_subprocesses(argu, "STATUS: Generating track ini file...", "generating tracks_"+virus_name+".ini")
+                argu=["make_tracks_file", "--trackFile",  os.path.join(args.output_path, "coverage_"+krename+".bw"),
+                    "-o", os.path.join(args.output_path, "tracks_"+krename+".ini")]
+                ef._run_subprocesses(argu, "STATUS: Generating track ini file...", "generating tracks_"+krename+".ini")
                 
-                process_ini_file(args, os.path.join(args.output_path, "tracks_"+virus_name+".ini"))
+                process_ini_file(args, os.path.join(args.output_path, "tracks_"+krename+".ini"))
                 
-                argu=["pyGenomeTracks", "--tracks", os.path.join(args.output_path, "tracks_"+virus_name+"edit.ini"),
+                argu=["pyGenomeTracks", "--tracks", os.path.join(args.output_path, "tracks_"+krename+"edit.ini"),
                     "--region", str(virus_name)+":"+str(1)+"-"+str(length_genome), "--dpi", "200", "--outFileName",
-                    os.path.join(args.output_path, virus_name+"_coveragemap.pdf")]
+                    os.path.join(args.output_path, krename+"_coveragemap.pdf")]
                 ef._run_subprocesses(argu, "STATUS: Generating pdf coverage map...", "generating pdf coverage map")
 
-                argu=["pyGenomeTracks", "--tracks", os.path.join(args.output_path, "tracks_"+virus_name+"edit.ini"),
+                argu=["pyGenomeTracks", "--tracks", os.path.join(args.output_path, "tracks_"+krename+"edit.ini"),
                     "--region", str(virus_name)+":"+str(1)+"-"+str(length_genome), "--dpi", "200","--outFileName",
-                    os.path.join(args.output_path, virus_name+"_coveragemap.png")]
+                    os.path.join(args.output_path, krename+"_coveragemap.png")]
                 ef._run_subprocesses(argu, "STATUS: Generating png coverage map...", "generating png coverage map")
         else:
             print ("STATUS: "+virus_name+" No cells have pathogen reads reads not generating coverage plot")
