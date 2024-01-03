@@ -95,3 +95,6 @@ def map2pathogengenome(args):
 
     print( "STATUS: generating bam index")
     pysam.index( os.path.join(args.output_path,"pathogen_al_mapped_sort.bam"))
+    
+    print("STATUS: generating fastq file for all mapped reads")
+    pysam.bam2fq('-n', '-0', os.path.join(args.output_path, "pathogen_al_mapped.fq"), os.path.join(args.output_path,"pathogen_al_mapped_sort.bam"),  catch_stdout=False)
