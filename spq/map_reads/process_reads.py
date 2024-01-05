@@ -4,7 +4,6 @@ __description__ = "processes unmapped reads"
 
 import re
 import os
-import subprocess
 from sys import platform
 import pysam
 PATH = os.path.dirname(os.path.abspath(__file__))
@@ -15,13 +14,6 @@ elif platform == "OS":
     bowtie2path = os.path.join(PATH, "aligntools","bowtie2-2.4.2-macos-x86_64")
 else:
     ValueError("Program wont run on this operating system "+platform)
-
-def _check_subprocess_run(returncode, stderrdata, runinfo):
-    if returncode == 0:
-        print("STATUS: "+runinfo+" complete")
-    else:
-        print("WARNING: Issue with "+runinfo+" reads")
-        print(stderrdata)
 
 def process_unmapped_reads(args, viable_cb):
     try: 
@@ -50,7 +42,7 @@ def process_unmapped_reads(args, viable_cb):
                                 fout.write(re.sub("CB:Z:", "", larray[-4])+","+re.sub("UB:Z:", "", larray[-1])+","+larray[0]+"\n")
 
         # -- convert to fastq file
-        pysam.bam2fq('-n', '-0', os.path.join(args.output_path, "_tmp", "unmapped.fq"), os.path.join(args.output_path,"_tmp","unmapped.bam"),  catch_stdout=False)
+        pysam.bam2fq('-n', '-0', os.path.join(args.output_path, "_tmp", "unmapped.fq.gz"), os.path.join(args.output_path,"_tmp","unmapped.bam"),  catch_stdout=False)
 
     except:
         print("STATUS: _tmp folder already exists so not regenerating data, path "+str(os.path.join(args.output_path, "_tmp")))
