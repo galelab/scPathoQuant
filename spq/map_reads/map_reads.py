@@ -57,24 +57,24 @@ def map2pathogengenome(args):
     if args.aligner == "bowtie2":
         if args.bowtie2_params is None:
             arg=[os.path.join(bowtie2path, "bowtie2"), "-p", args.processors, 
-            "-q", os.path.join(args.output_path,"_tmp", "unmapped.fq"), 
+            "-q", os.path.join(args.output_path,"_tmp", "unmapped.fq.gz"), 
             "-x", os.path.join(args.path2genome,"genome"), 
             "-S", os.path.join(args.output_path, "pathogen_al.sam")]
         else:
             arg=[os.path.join(bowtie2path, "bowtie2"), "-p", args.processors, 
-            "-q", os.path.join(args.output_path,"_tmp", "unmapped.fq"), 
+            "-q", os.path.join(args.output_path,"_tmp", "unmapped.fq.gz"), 
             "-x", os.path.join(args.path2genome,"genome"), 
             "-S", os.path.join(args.output_path, "pathogen_al.sam")] + args.bowtie2_params
             
         ef._run_subprocesses(arg, "STATUS: Align reads bowtie2 global...", "aligning reads")
     elif args.aligner == "bbmap":
         if args.bbmap_params is None:
-            arg=[os.path.join(bbmap2path, "bbmap.sh"), "ref="+bbmapgenomefile, "in="+os.path.join(args.output_path,"_tmp", "unmapped.fq"), "nodisk=t" ,"local=f",
+            arg=[os.path.join(bbmap2path, "bbmap.sh"), "ref="+bbmapgenomefile, "in="+os.path.join(args.output_path,"_tmp", "unmapped.fq.gz"), "nodisk=t" ,"local=f",
                 "covstats="+os.path.join(args.output_path, "constats.txt"), "covhist="+os.path.join(args.output_path,"covhist.txt"), "minid=0.95",
                 "basecov="+os.path.join(args.output_path,"basecov.txt"), "bincov="+os.path.join(args.output_path, "bincov.txt"),
                 "out="+os.path.join(args.output_path, "pathogen_al.sam")]
         else:
-            arg=[os.path.join(bbmap2path, "bbmap.sh"), "ref="+bbmapgenomefile, "in="+os.path.join(args.output_path,"_tmp", "unmapped.fq"), "nodisk=t" ,"local=f",
+            arg=[os.path.join(bbmap2path, "bbmap.sh"), "ref="+bbmapgenomefile, "in="+os.path.join(args.output_path,"_tmp", "unmapped.fq.gz"), "nodisk=t" ,"local=f",
                 "covstats="+os.path.join(args.output_path, "constats.txt"), "covhist="+os.path.join(args.output_path,"covhist.txt"), "minid=0.95",
                 "basecov="+os.path.join(args.output_path,"basecov.txt"), "bincov="+os.path.join(args.output_path, "bincov.txt"),
                 "out="+os.path.join(args.output_path, "pathogen_al.sam")] + args.bbmap_params
@@ -97,4 +97,4 @@ def map2pathogengenome(args):
     pysam.index( os.path.join(args.output_path,"pathogen_al_mapped_sort.bam"))
     
     print("STATUS: generating fastq file for all mapped reads")
-    pysam.bam2fq('-n', '-0', os.path.join(args.output_path, "pathogen_al_mapped.fq"), os.path.join(args.output_path,"pathogen_al_mapped_sort.bam"),  catch_stdout=False)
+    pysam.bam2fq('-n', '-0', os.path.join(args.output_path, "pathogen_al_mapped.fq.gz"), os.path.join(args.output_path,"pathogen_al_mapped_sort.bam"),  catch_stdout=False)
