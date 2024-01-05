@@ -77,11 +77,13 @@ Output files by scPathoQuant
 * pathogen_al_mapped.sam - reads mapped to only pathogen (no unmapped reads)
 * pathogen_al_mapped_sort.bam - sorted reads mapped to pathogen (can be used to visualize reads in [IGV](https://www.igv.org/))
 * pathogen_al_mapped_sort.bam.bai - index file to pathogen_al_sort.bam
+* pathogen_al_mapped.fq.gz - fastq file of mapped reads to pathogens of interest.  Can be used to further perform phylogenetic and clade analyses 
 * pathogen_al_sort_counts.sam - htseq output reads mapping to pathogen
 * pathogen_genes_al_sort_counts.sam - htseq output reads mapping to individual pathogen genes (will not be produced if pathogen/viral gtf is not provided)
 * Overwrites original 10x data provided to include pathogen counts and pathogen gene counts (if gtf file is provided)
 * Path/to/10x/sample/outs/filtered_feature_bc_matrix_scPathoQuant_bbmap - files that can be integrated into seurat with pathogen counts 
 * Path/to/10x/sample/outs/raw_feature_bc_matrix_scPathoQuant_bbmap - files that can be integrated into seurat with pathogen counts (this is not always needed)
+
 
 ### Loading data with pathogen counts into Seurat 
 ----------------------------------------------
@@ -89,6 +91,15 @@ Example seurat command in R
 ```bash 
 seurat.object.data <- Read10X(data.dir ="Path/to/10x/sample/outs/filtered_feature_bc_matrix_scPathoQuant_bbmap")
 ```
+
+### Output files in _tmp/ folder  
+--------------------------------
+Files in _tmp/ folder 
+* unmmaped.bam - all unmapped reads from CellRanger (pulled from possorted_genome_bam.bam)
+* unmmaped.sam - sam file generated from unmmaped.bam so that barcodes and umis can be extracted for unmmaped reds 
+* barcodes_umi_read_table.csv - table of unmapped reads and corresponding barcodes and UMIs 
+* unmapped.fq.gz - all unmapped reads in fastq format could be used fo downstream phylogentic analysis 
+
 ### Examples run codes 
 ----------------------
 Examples and test data sets and codes for scPathoQuant can be found [here](https://github.com/galelab/Whitmore_scPathoQuant_testSets)
