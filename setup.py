@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name="scPathoQuant",
-      version="1.0.0",
+      version="1.1.0",
       description="The goal of this package is to accurately align and quantify viral reads for 10x single cell data. \
                    This software integrates viral counts and viral gene counts into 10x files (features.tsv.gz and matrix.mtx.gz \
                   in the filtered_feature_bc_matrix folder) so that softwares such as seurat can be used to analyze data",
