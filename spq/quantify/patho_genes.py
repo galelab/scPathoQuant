@@ -32,9 +32,9 @@ def quantify_reads(output_path,filename, virus_names):
     ## -- get umi and cell barcode information 
     dfumiall = dict()
     for k, t in reads_mapping.items():
+        krename = re.sub("\/", "_",k )
+        krename = re.sub(" ", "_",krename)        
         if len(t.keys()) > 0:
-            krename = re.sub("\/", "_",k )
-            krename = re.sub(" ", "_",krename)
             tmpdf = pd.DataFrame.from_dict(t,orient='index')   
             df = pd.read_csv(os.path.join(output_path,"_tmp", "barcode_umi_read_table.csv"))
             df1 = df[df['read'].isin(t.keys())]
