@@ -9,7 +9,6 @@ import gzip
 from spq.map_reads import map_reads as mr
 
 def checkgenomefile(args):
-    print ("test")
     files_genome = mr._get_genome_file(args)
     if len(files_genome) > 1:
         print("WARNING: two fasta files in genome folder using this one "+files_genome[0])
@@ -17,7 +16,6 @@ def checkgenomefile(args):
         for line in fin:
             line = line.strip()
             if line.startswith(">"):
-              print (line)
               if re.search("\s", line) :
                     print("ERROR: space in line "+line.strip()+"\nin file "+files_genome[0]+"\nRemove ALL spaces and rerun code")
                     sys.exit()
