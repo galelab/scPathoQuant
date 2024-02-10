@@ -146,8 +146,8 @@ def integrate_pathogenes_data_2_matrix(args, dfumidict):
         filter_folder="filtered_feature_bc_matrix"
         raw_folder="raw_feature_bc_matrix"
     else:
-        filter_folder="filtered_feature_bc_matrix_"+"scViralQuant_"+args.aligner
-        raw_folder="raw_feature_bc_matrix_"+"scViralQuant_"+args.aligner
+        filter_folder="filtered_feature_bc_matrix_"+"scPathoQuant_"+args.aligner
+        raw_folder="raw_feature_bc_matrix_"+"scPathoQuant_"+args.aligner
 
         if os.path.isdir(os.path.join(path10x, "outs", filter_folder)) is False:
            shutil.copytree(os.path.join(path10x, "outs", "filtered_feature_bc_matrix"), os.path.join(path10x, "outs", filter_folder), copy_function = shutil.copy)
