@@ -28,6 +28,9 @@ def _get_genome_file(args):
             files_genome = glob.glob(os.path.join(args.path2genome, "*.fna"))
             if (len(files_genome) == 0):
                 AssertionError("NO GENOME FILE WAS FOUND, NEEDS TO END IN .fa, .fasta, or .fna")
+    print("STATUS TESTING GENOME LOADING 1")
+    print(files_genome)
+    print(os.path.join(args.path2genome, "*.fa"))
     return(files_genome)
 
 def map2pathogengenome(args):
