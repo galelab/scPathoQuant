@@ -13,7 +13,7 @@ if platform == "linux":
 elif platform == "OS":
     bowtie2path = os.path.join(PATH, "aligntools","bowtie2-2.4.2-macos-x86_64")
 else:
-    ValueError("Program wont run on this operating system "+platform)
+    raise ValueError("Program wont run on this operating system "+platform)
 
 def process_unmapped_reads(args, viable_cb):
     try: 
