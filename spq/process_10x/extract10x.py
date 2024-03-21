@@ -32,4 +32,4 @@ def extract_viable_10x(path10x):
         print ("STATUS: Number of viable barcodes is "+str(len(barcodes))+"... should match what is in 10x web_summary")
         return barcodes
     else:
-        AssertionError("Could not find 10x path "+path10x+"/outs/")
+        raise AssertionError("Could not find 10x path "+path10x+"/outs/")
