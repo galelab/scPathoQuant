@@ -12,13 +12,6 @@ import pysam
 
 PATH = os.path.dirname(os.path.abspath(__file__))
 PATH = re.sub("map_reads", "", PATH)
-if platform == "linux":
-    bbmap2path = os.path.join(PATH, "aligntools", "bbmapv38.9")
-    bowtie2path = os.path.join(PATH, "aligntools","bowtie2-2.4.2-linux-x86_64")
-elif platform == "OS":
-    bowtie2path = os.path.join(PATH, "aligntools", "bowtie2-2.4.2-macos-x86_64")
-else:
-    ValueError("Program wont run on this operating system "+platform)
 
 def _get_genome_file(args):
     files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
@@ -28,12 +21,18 @@ def _get_genome_file(args):
             files_genome = glob.glob(os.path.join(args.path2genome, "*.fna"))
             if (len(files_genome) == 0):
                 AssertionError("NO GENOME FILE WAS FOUND, NEEDS TO END IN .fa, .fasta, or .fna")
-    print("STATUS TESTING GENOME LOADING 1")
-    print(files_genome)
-    print(os.path.join(args.path2genome, "*.fa"))
     return(files_genome)
 
 def map2pathogengenome(args):
+    if platform == "linux":
+        bbmap2path = os.path.join(PATH, "aligntools", "bbmapv38.9")
+        print("STATUS: TESTING bbmap2path variable")
+        print(bbmap2path)
+        bowtie2path = os.path.join(PATH, "aligntools","bowtie2-2.4.2-linux-x86_64")
+    elif platform == "OS":
+        bowtie2path = os.path.join(PATH, "aligntools", "bowtie2-2.4.2-macos-x86_64")
+    else:
+        ValueError("Program won't run on this operating system "+platform)
 
     # -- check if libraries are present if not generate 
     if args.aligner == "bowtie2":
