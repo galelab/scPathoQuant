@@ -34,7 +34,7 @@ def map2pathogengenome(args):
     elif platform == "OS":
         bowtie2path = os.path.join(PATH, "aligntools", "bowtie2-2.4.2-macos-x86_64")
     else:
-        ValueError("Program won't run on this operating system "+platform)
+       raise ValueError("Program won't run on this operating system "+platform)
 
     # -- check if libraries are present if not generate 
     if args.aligner == "bowtie2":
