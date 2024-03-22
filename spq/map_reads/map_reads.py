@@ -24,6 +24,8 @@ def _get_genome_file(args):
     return(files_genome)
 
 def map2pathogengenome(args):
+    print("STATUS: Platform")
+    print(platform)
     if platform == "linux":
         bbmap2path = os.path.join(PATH, "aligntools", "bbmapv38.9")
         print("STATUS: TESTING bbmap2path variable")
