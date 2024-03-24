@@ -12,6 +12,19 @@ import pysam
 
 PATH = os.path.dirname(os.path.abspath(__file__))
 PATH = re.sub("map_reads", "", PATH)
+print("STATUS: Platform")
+print(platform)
+if platform == "linux":
+    bowtie2path = os.path.join(PATH, "aligntools","bowtie2-2.4.2-linux-x86_64")
+elif platform == "OS" or platform=="darwin":
+    bowtie2path = os.path.join(PATH, "aligntools", "bowtie2-2.4.2-macos-x86_64")
+else:
+    raise ValueError("Program won't run on this operating system "+platform)
+
+if platform=="linux" or platform=="darwin":
+    bbmap2path = os.path.join(PATH, "aligntools", "bbmapv38.9")
+else:
+    raise ValueError("Program won't run on this operating system "+platform)
 
 def _get_genome_file(args):
     files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
@@ -24,18 +37,6 @@ def _get_genome_file(args):
     return(files_genome)
 
 def map2pathogengenome(args):
-    print("STATUS: Platform")
-    print(platform)
-    if platform == "linux":
-        bbmap2path = os.path.join(PATH, "aligntools", "bbmapv38.9")
-        print("STATUS: TESTING bbmap2path variable")
-        print(bbmap2path)
-        bowtie2path = os.path.join(PATH, "aligntools","bowtie2-2.4.2-linux-x86_64")
-    elif platform == "OS":
-        bowtie2path = os.path.join(PATH, "aligntools", "bowtie2-2.4.2-macos-x86_64")
-    else:
-       raise ValueError("Program won't run on this operating system "+platform)
-
     # -- check if libraries are present if not generate 
     if args.aligner == "bowtie2":
         files = glob.glob(os.path.join(args.path2genome,"*.bt2"))
