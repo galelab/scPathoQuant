@@ -24,8 +24,8 @@ def parse_arguments():
     parser.add_argument("-p", "--processors", default=1)
     parser.add_argument("-p2genome", "--path2genome", type=str, required=True)
     parser.add_argument("-align", "--aligner", type=str, default="bbmap")
-    parser.add_argument("-v", "--vizualization", type=bool, default=True)
-    parser.add_argument("-c", "--coveragemaps", type=bool, default=True)
+    parser.add_argument("-v", "--vizualization", type=str, default="True")
+    parser.add_argument("-c", "--coveragemaps", type=str, default="True")
     parser.add_argument("-in_filtered", "--input_filtered_folder", type=str, required=False, default="filtered_feature_bc_matrix")
     parser.add_argument("-out_filtered", "--output_filtered_folder", type=str, required=False, default="filtered_feature_bc_matrix")
     parser.add_argument("-in_raw", "--input_raw_folder", type=str, required=False, default="raw_feature_bc_matrix")
@@ -44,14 +44,14 @@ if __name__ == '__main__':
     pr.process_unmapped_reads(args, viable_cb)
     mr.map2pathogengenome(args)
     dfvc, virus_names = vc.htseq_run(args)
-    if args.vizualization:
+    if args.vizualization=="True":
         viz.generate_viral_copy_plots(args, dfvc)
-        if args.coveragemaps:
+        if args.coveragemaps=="True":
             viz.generate_coverage_maps(args, dfvc)
     integrate.integrate_data_2_matrix(args, dfvc, virus_names)
     dfgenes = vg.htseq_run(args, virus_names)
     if dfgenes is not False:
-        if args.vizualization:
+        if args.vizualization=="True":
             viz.generate_viral_gene_plots(args, dfgenes)
         integrate.integrate_pathogenes_data_2_matrix(args, dfgenes)
     if args.tmp_removal:
