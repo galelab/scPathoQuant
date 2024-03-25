@@ -12,8 +12,6 @@ import pysam
 
 PATH = os.path.dirname(os.path.abspath(__file__))
 PATH = re.sub("map_reads", "", PATH)
-print("STATUS: Platform")
-print(platform)
 if platform == "linux":
     bowtie2path = os.path.join(PATH, "aligntools","bowtie2-2.4.2-linux-x86_64")
 elif platform == "OS" or platform=="darwin":
