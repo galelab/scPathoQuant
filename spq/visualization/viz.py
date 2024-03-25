@@ -92,10 +92,13 @@ def generate_coverage_maps(args, dfumidict):
                 print("STATUS: processing gtf for conversion to bed")
                 with open(files_gtf[0], 'r') as fin:
                     with open(os.path.join(args.output_path, "genes_"+virus_name+".gtf"), "w") as fout:
-                        for line in fin: 
-                            larray = line.split("\t")
-                            if(larray[2]=="gene" and larray[0]==virus_name):
-                                fout.write(line)
+                        for line in fin:
+                            if line.startswith("#"):
+                                pass 
+                            else:
+                                larray = line.split("\t")
+                                if(larray[2]=="gene" and larray[0]==virus_name):
+                                    fout.write(line)
 
                 cmd = "gtf2bed < "+os.path.join(args.output_path, "genes_"+virus_name+".gtf")+" > "+os.path.join(args.output_path, "genes_"+virus_name+".bed") 
                 r = subprocess.call(cmd, shell=True)  
