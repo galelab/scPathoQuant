@@ -1,7 +1,7 @@
 pandas
 argparse
 htseq
-scipy
+scipy==1.4.1
 seaborn
 pysam
 setuptools>=59.0.0
