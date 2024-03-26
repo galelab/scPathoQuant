@@ -18,17 +18,19 @@ def quantify_reads(output_path,filename, virus_names):
 
     with open(filename, 'r') as fin:
         for line in fin:
-            print(line)
             for virus_name in virus_names:
-                larray = line.strip().split("\t")
-                if larray[-1] != "XF:Z:__no_feature" and larray[-1] !="XF:Z:__too_low_aQual":
-                    if larray[-1].startswith("XF:Z:__ambiguous"):
-                        pass
-                    elif larray[-1].startswith("XF:Z:__not_aligned"):
-                        pass
-                    else:
-                        reads_mapping[larray[2]][larray[0]] = re.sub(
-                            "XF:\w+:", "", larray[-1])
+                if line.startswith("@"): 
+                    pass 
+                else:
+                    larray = line.strip().split("\t")
+                    if larray[-1] != "XF:Z:__no_feature" and larray[-1] !="XF:Z:__too_low_aQual":
+                        if larray[-1].startswith("XF:Z:__ambiguous"):
+                            pass
+                        elif larray[-1].startswith("XF:Z:__not_aligned"):
+                            pass
+                        else:
+                            reads_mapping[larray[2]][larray[0]] = re.sub(
+                                "XF:\w+:", "", larray[-1])
 
     ## -- get umi and cell barcode information 
     dfumiall = dict()
