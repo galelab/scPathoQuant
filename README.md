@@ -106,8 +106,7 @@ Examples and test data sets and codes for scPathoQuant can be found [here](https
 
 ### CITATION
 -------------
-Leanne S Whitmore, Jennifer Tisoncik-Go, Michael Gale Jr., scPathoQuant: A tool for efficient alignment and quantification of pathogen sequence reads from 10x single cell sequencing data sets, Bioinformatics, 2024;, PMID: 38478395, btae145, https://doi.org/10.1093/bioinformatics/btae145
-
+Whitmore LS, Tisoncik-Go J, Gale M Jr. scPathoQuant: a tool for efficient alignment and quantification of pathogen sequence reads from 10× single cell sequencing datasets. Bioinformatics. 2024 Mar 29;40(4):btae145. doi: 10.1093/bioinformatics/btae145. PMID: 38478395; PMCID: PMC10990681.
 
 ### LICENSE
 ----------------
