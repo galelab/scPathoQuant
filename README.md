@@ -3,7 +3,7 @@ The goal of this python package is to accurately align and quantify viral or bac
 
 ### Dependencies
 ----------------
-scPathoQuant requires **python 3.8 or greater**
+scPathoQuant requires **python 3.8 or greater** (tested on 3.8)
 
 * pandas==2.0.3
 * argparse==1.4.0
