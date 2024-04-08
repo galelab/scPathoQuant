@@ -3,18 +3,18 @@ The goal of this python package is to accurately align and quantify viral or bac
 
 ### Dependencies
 ----------------
-scPathoQuant is tested to work in python 3.6.8
+scPathoQuant requires **python 3.8 or greater**
 
-* argsparse
-* htseq
-* pandas 
-* scipy
-* pysam
-* seaborn
+* pandas==2.0.3
+* argparse==1.4.0
+* htseq==2.0.5
+* scipy==1.10.1
+* seaborn==0.13.0
+* pysam==0.22.0
 * setuptools>=59.0.0
-* GFFUtils
-* deepTools
-* pyGenomeTracks
+* matplotlib==3.3.2
+* GFFUtils==0.12
+* pyGenomeTracks==3.6
 
 Currently only set to run on linux & mac but has only been tested on a linux platform
 
@@ -26,8 +26,7 @@ Go into downloaded scPathoQuant folder and run the following commands
 ```bash
 git clone https://github.com/galelab/scPathoQuant.git
 cd ./scPathoQuant
-pip install -r requirements.txt
-python setup.py install
+pip install .
 ```
 
 ### Running scPathoQuant 
