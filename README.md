@@ -4,6 +4,7 @@ The goal of this python package is to accurately align and quantify viral or bac
 ### Dependencies
 ----------------
 Make sure java is installed ( needed for bbmap install ) if not click [here](https://openjdk.org/install/) for installation
+
 scPathoQuant requires **python 3.8 or greater** (tested on 3.8)
 
 * pandas==2.0.3
