@@ -23,6 +23,7 @@ Currently only set to run on linux & mac but has only been tested on a linux pla
 ### Installation
 ----------------
 Make sure pip version is 21.3.1 or greater (**NOTE:** pip version 22.0.2 **will not work!**) 
+
 Go into downloaded scPathoQuant folder and run the following commands
 
 ```bash
