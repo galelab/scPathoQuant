@@ -12,7 +12,6 @@ setup(name="scPathoQuant",
       packages=find_packages(),
       install_requires=[
         "pandas==2.0.3",
-        "argparse==1.4.0",
         "htseq==2.0.5",
         "scipy==1.10.1",
         "seaborn==0.13.0",
