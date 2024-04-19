@@ -3,10 +3,13 @@ __email__ = "leanne382@gmail.com"
 __description__ = "quantify pathogen genes"
 
 import os
+import sys
 import re
 import glob
 import pandas as pd
 import spq.extra_functions as ef
+binpath = os.path.join(sys.exec_prefix, "bin")
+
 
 def quantify_reads(output_path,filename, virus_names):
     
@@ -84,7 +87,7 @@ def htseq_run(args, virus_names):
         print ("STATUS: No gtf file not counting reads for individual pathogen genes")
         return False
     elif len(files_gtf) ==1:
-        arg=["htseq-count", "--format=bam", "--mode=intersection-nonempty", "--type=gene", "--idattr=gene_id", os.path.join(args.output_path, "pathogen_al_mapped_sort.bam"),
+        arg=[os.path.join(binpath,"htseq-count"), "--format=bam", "--mode=intersection-nonempty", "--type=gene", "--idattr=gene_id", os.path.join(args.output_path, "pathogen_al_mapped_sort.bam"),
             files_gtf[0], "--samout="+os.path.join(args.output_path,"pathogen_genes_al_sort_counts.sam")]
         ef._run_subprocesses(arg, "STATUS: running htseq for pathogen genes ", "running htseq for pathogen genes")
         dfumi = quantify_reads(args.output_path, os.path.join(args.output_path, "pathogen_genes_al_sort_counts.sam"), virus_names)
