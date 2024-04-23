@@ -19,7 +19,8 @@ setup(name="scPathoQuant",
         "setuptools>=59.0.0",
         "matplotlib==3.3.2",
         "GFFUtils==0.12",
-        "pyGenomeTracks==3.6"
+        "pyGenomeTracks==3.6",
+        "deepTools==3.5.5"
       ],
       include_package_data=True,
       zip_safe=False,
