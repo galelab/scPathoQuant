@@ -7,22 +7,10 @@ import os
 import glob
 import subprocess
 import spq.extra_functions as ef
-from sys import platform
 import pysam
 
 PATH = os.path.dirname(os.path.abspath(__file__))
 PATH = re.sub("map_reads", "", PATH)
-if platform == "linux":
-    bowtie2path = os.path.join(PATH, "aligntools","bowtie2-2.4.2-linux-x86_64")
-elif platform == "OS" or platform=="darwin":
-    bowtie2path = os.path.join(PATH, "aligntools", "bowtie2-2.4.2-macos-x86_64")
-else:
-    raise ValueError("Program won't run on this operating system "+platform)
-
-if platform=="linux" or platform=="darwin":
-    bbmap2path = os.path.join(PATH, "aligntools", "bbmapv38.9")
-else:
-    raise ValueError("Program won't run on this operating system "+platform)
 
 def _get_genome_file(args):
     files_genome = glob.glob(os.path.join(args.path2genome, "*.fa"))
@@ -43,7 +31,7 @@ def map2pathogengenome(args):
             bowtie2genomefile = files_genome[0]
             if len(files_genome) > 1:
                 print("WARNING:  two fasta files in genome folder using this one "+files_genome[0])
-            arg=[os.path.join(bowtie2path, "bowtie2-build"), bowtie2genomefile, os.path.join(args.path2genome, "genome")]
+            arg=["bowtie2-build", bowtie2genomefile, os.path.join(args.path2genome, "genome")]
             ef._run_subprocesses(arg, "STATUS: generating libraries bowtie2 ...", "extracting unmapped")
 
         else:
@@ -59,12 +47,12 @@ def map2pathogengenome(args):
     # -- align reads 
     if args.aligner == "bowtie2":
         if args.bowtie2_params is None:
-            arg=[os.path.join(bowtie2path, "bowtie2"), "-p", args.processors, 
+            arg=["bowtie2", "-p", args.processors,
             "-q", os.path.join(args.output_path,"_tmp", "unmapped.fq.gz"), 
             "-x", os.path.join(args.path2genome,"genome"), 
             "-S", os.path.join(args.output_path, "pathogen_al.sam")]
         else:
-            arg=[os.path.join(bowtie2path, "bowtie2"), "-p", args.processors, 
+            arg=["bowtie2", "-p", args.processors,
             "-q", os.path.join(args.output_path,"_tmp", "unmapped.fq.gz"), 
             "-x", os.path.join(args.path2genome,"genome"), 
             "-S", os.path.join(args.output_path, "pathogen_al.sam")] + args.bowtie2_params
@@ -72,12 +60,12 @@ def map2pathogengenome(args):
         ef._run_subprocesses(arg, "STATUS: Align reads bowtie2 global...", "aligning reads")
     elif args.aligner == "bbmap":
         if args.bbmap_params is None:
-            arg=[os.path.join(bbmap2path, "bbmap.sh"), "ref="+bbmapgenomefile, "in="+os.path.join(args.output_path,"_tmp", "unmapped.fq.gz"), "nodisk=t" ,"local=f",
+            arg=["bbmap.sh", "ref="+bbmapgenomefile, "in="+os.path.join(args.output_path,"_tmp", "unmapped.fq.gz"), "nodisk=t" ,"local=f",
                 "covstats="+os.path.join(args.output_path, "constats.txt"), "covhist="+os.path.join(args.output_path,"covhist.txt"), "minid=0.95",
                 "basecov="+os.path.join(args.output_path,"basecov.txt"), "bincov="+os.path.join(args.output_path, "bincov.txt"),
                 "out="+os.path.join(args.output_path, "pathogen_al.sam")]
         else:
-            arg=[os.path.join(bbmap2path, "bbmap.sh"), "ref="+bbmapgenomefile, "in="+os.path.join(args.output_path,"_tmp", "unmapped.fq.gz"), "nodisk=t" ,"local=f",
+            arg=["bbmap.sh", "ref="+bbmapgenomefile, "in="+os.path.join(args.output_path,"_tmp", "unmapped.fq.gz"), "nodisk=t" ,"local=f",
                 "covstats="+os.path.join(args.output_path, "constats.txt"), "covhist="+os.path.join(args.output_path,"covhist.txt"), "minid=0.95",
                 "basecov="+os.path.join(args.output_path,"basecov.txt"), "bincov="+os.path.join(args.output_path, "bincov.txt"),
                 "out="+os.path.join(args.output_path, "pathogen_al.sam")] + args.bbmap_params
