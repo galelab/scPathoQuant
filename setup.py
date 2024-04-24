@@ -1,5 +1,7 @@
+import os
 from setuptools import setup, find_packages
 
+requirements = open(os.path.join(os.path.dirname(__file__), 'requirements.txt')).readlines()
 setup(name="scPathoQuant",
       version="1.2.0",
       description="The goal of this package is to accurately align and quantify viral reads for 10x single cell data. \
@@ -10,18 +12,7 @@ setup(name="scPathoQuant",
       platforms=["linux"],
       keywords='single-cell, viral/pathogen, quantification',
       packages=find_packages(),
-      install_requires=[
-        "pandas==2.0.3",
-        "htseq==2.0.5",
-        "scipy==1.10.1",
-        "seaborn==0.13.0",
-        "pysam==0.22.0",
-        "setuptools>=59.0.0",
-        "matplotlib==3.3.2",
-        "GFFUtils==0.12",
-        "pyGenomeTracks==3.6",
-        "deepTools==3.5.5"
-      ],
+      install_requires=requirements,
       include_package_data=True,
       zip_safe=False,
       scripts=[
