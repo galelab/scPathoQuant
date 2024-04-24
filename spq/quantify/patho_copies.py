@@ -4,12 +4,10 @@ __description__ = "quantify pathogen copies"
 
 import os
 import re
-import sys
 import glob
 import pandas as pd
 from spq.map_reads import map_reads as mr
 import spq.extra_functions as ef
-binpath = os.path.join(sys.exec_prefix, "bin")
 
 def read_FASTA(filename):
     begin = True
@@ -83,7 +81,7 @@ def htseq_run(args):
     ## -- generate gtf for pathogen copies
 
     virus_names = _generate_pathogen_gtf(args)
-    arg=[os.path.join(binpath,"htseq-count"), "--format=bam", "--mode=intersection-nonempty", "--idattr=gene_id", os.path.join(args.output_path, "pathogen_al_mapped_sort.bam"),
+    arg=["htseq-count", "--format=bam", "--mode=intersection-nonempty", "--idattr=gene_id", os.path.join(args.output_path, "pathogen_al_mapped_sort.bam"),
          os.path.join(args.output_path,"_tmp","pathogen_copy.gtf"), "--samout="+os.path.join(args.output_path,"pathogen_al_sort_counts.sam")]
     ef._run_subprocesses(arg, "STATUS: running htseq for pathogen copies ", "running htseq for pathogen copies")
 
