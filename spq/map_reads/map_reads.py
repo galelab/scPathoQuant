@@ -76,13 +76,13 @@ def map2pathogengenome(args):
     pysam.view("-@", str(args.processors),"-S", "-b", os.path.join(args.output_path,"pathogen_al.sam"), 
                "-o", os.path.join(args.output_path, "pathogen_al.bam"), catch_stdout=False)
 
-    print("STATUS: Converting mapped reads to from bam to sam file")
+    print("STATUS: Filtering mapped reads")
     pysam.view("-@", str(args.processors),  "-b", "-F", "4", os.path.join(args.output_path, "pathogen_al.bam"), 
-                "-o",  os.path.join(args.output_path, "pathogen_al_mapped.sam"), catch_stdout=False)
+                "-o",  os.path.join(args.output_path, "pathogen_al_mapped.bam"), catch_stdout=False)
 
     print("STATUS: Sorting bam")
     pysam.sort("-@", str(args.processors), "-o", os.path.join(args.output_path,"pathogen_al_mapped_sort.bam"), 
-            os.path.join(args.output_path,"pathogen_al_mapped.sam"))
+            os.path.join(args.output_path,"pathogen_al_mapped.bam"))
 
     print( "STATUS: generating bam index")
     pysam.index( os.path.join(args.output_path,"pathogen_al_mapped_sort.bam"))
