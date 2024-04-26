@@ -55,6 +55,7 @@ def generate_viral_gene_plots(args, dfumidict):
             virusname_rename = re.sub(" ", "_",virusname_rename)
             ax = sns.violinplot(x="gene", y="umi",data=dfumi)
             xlabels = ax.get_xticklabels()
+            ax.set_xticks(ax.get_xticks())
             ax.set_xticklabels(labels=xlabels, rotation=90)
             ax.set(xlabel='genes', ylabel="UMI counts")
             g = ax.get_figure()
