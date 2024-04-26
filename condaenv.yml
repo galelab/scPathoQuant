@@ -1,0 +1,15 @@
+name: scpathoquant
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bbmap=38.90
+  - bowtie2=2.4.2
+  - htseq=2.0.5
+  - pysam=0.22.0
+  - pybedtools>=0.8.1
+  - deepTools>=3.5.5
+  - matplotlib
+  - pyGenomeTracks>=3.6
+  - seaborn>=0.13
+  - bedops

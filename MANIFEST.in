@@ -1,3 +1,0 @@
-recursive-include spq/aligntools/bbmapv38.9/ *
-include spq/aligntools/bowtie2-2.4.2-linux-x86_64/*
-include spq/aligntools/bowtie2-2.4.2-macos-x86_64/*

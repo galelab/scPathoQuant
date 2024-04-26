@@ -4,16 +4,10 @@ __description__ = "processes unmapped reads"
 
 import re
 import os
-from sys import platform
 import pysam
+
 PATH = os.path.dirname(os.path.abspath(__file__))
 PATH = re.sub("map_reads", "", PATH)
-if platform == "linux":
-    bowtie2path = os.path.join(PATH, "aligntools", "bowtie2-2.4.2-linux-x86_64")
-elif platform == "OS" or platform == "darwin":
-    bowtie2path = os.path.join(PATH, "aligntools","bowtie2-2.4.2-macos-x86_64")
-else:
-    raise ValueError("Program wont run on this operating system "+platform)
 
 def process_unmapped_reads(args, viable_cb):
     try: 
@@ -25,7 +19,7 @@ def process_unmapped_reads(args, viable_cb):
         os.mkdir(os.path.join(args.output_path, "_tmp"))
         # -- pull out unmapped reads
 
-        pysam.view( "-@", str(args.processors), "-b", "-h", "-f", "4", os.path.join(args.path10x, "outs", "possorted_genome_bam.bam"), "-o", os.path.join(args.output_path, "_tmp","unmapped.bam"), catch_stdout=False)
+        pysam.view("-@", str(args.processors), "-b", "-h", "-f", "4", os.path.join(args.path10x, "outs", "possorted_genome_bam.bam"), "-o", os.path.join(args.output_path, "_tmp","unmapped.bam"), catch_stdout=False)
         pysam.view("-@", str(args.processors), "-h", os.path.join(args.output_path,"_tmp", "unmapped.bam"), "-o", os.path.join(args.output_path, "_tmp", "unmapped.sam"), catch_stdout=False)
 
         # -- pull out umi and cell barcode information 
