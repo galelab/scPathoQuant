@@ -2,47 +2,40 @@ __author__ = "Leanne Whitmore"
 __email__ = "leanne382@gmail.com"
 __description__ = "integrate data in to matrix"
 
-from scipy.sparse import coo_matrix
-import scipy.io
 import os
 import shutil
 import gzip
 import csv
-import numpy as np
 import spq.extra_functions as ef
 
 
 def integrate_data_2_matrix(args, dfumidict, virus_names):
     path10x = args.path10x
 
-    if args.overwrite_feature_matrix:
-        filter_folder="filtered_feature_bc_matrix"
-        raw_folder="raw_feature_bc_matrix"
+    filter_folder=os.path.join(args.output_path, "filtered_feature_bc_matrix")
+    raw_folder=os.path.join(args.output_path,"raw_feature_bc_matrix")
+    if os.path.isdir(filter_folder) is False:
+        shutil.copytree(os.path.join(path10x, "outs", args.input_filtered_folder), filter_folder, copy_function = shutil.copy)
     else:
-        filter_folder=args.output_filtered_folder+"_scPathoQuant_"+args.aligner
-        raw_folder=args.output_raw_folder+"_scPathoQuant_"+args.aligner
-        if os.path.isdir(os.path.join(path10x, "outs", filter_folder)) is False:
-            shutil.copytree(os.path.join(path10x, "outs", args.input_filtered_folder), os.path.join(path10x, "outs", filter_folder), copy_function = shutil.copy)
-        else:
-            print("WARNING: filter folder exists so removing and recopying original")
-            shutil.rmtree(os.path.join(path10x, "outs", filter_folder))
-            shutil.copytree(os.path.join(path10x, "outs", args.input_filtered_folder), os.path.join(path10x, "outs", filter_folder), copy_function = shutil.copy)
-        if os.path.isdir(os.path.join(path10x, "outs", raw_folder)) is False:
-            shutil.copytree(os.path.join(path10x, "outs", args.input_raw_folder), os.path.join(path10x, "outs", raw_folder), copy_function = shutil.copy)
-        else:
-            print("WARNING: raw folder exists so removing and recopying original")
-            shutil.rmtree(os.path.join(path10x, "outs", raw_folder))
-            shutil.copytree(os.path.join(path10x, "outs", args.input_raw_folder), os.path.join(path10x, "outs", raw_folder), copy_function = shutil.copy)
+        print("WARNING: filter folder exists so removing and recopying original")
+        shutil.rmtree(filter_folder)
+        shutil.copytree(os.path.join(path10x, "outs", args.input_filtered_folder),filter_folder, copy_function = shutil.copy)
+    if os.path.isdir(raw_folder) is False:
+        shutil.copytree(os.path.join(path10x, "outs", args.input_raw_folder), raw_folder, copy_function = shutil.copy)
+    else:
+        print("WARNING: raw folder exists so removing and recopying original")
+        shutil.rmtree(raw_folder)
+        shutil.copytree(os.path.join(path10x, "outs", args.input_raw_folder), raw_folder, copy_function = shutil.copy)
 
     #####-- add data to filter folder files --#####
 
     # --Load in features and barcode matricies 
     print ("STATUS: Integrating pathogen copy counts into 10x matrix and feature files in filter folder")
-    feature_names_filtered = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs", filter_folder, "features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
-    barcodes_filtered = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs", filter_folder, "barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
+    feature_names_filtered = [row for row in csv.reader(gzip.open(os.path.join(filter_folder, "features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
+    barcodes_filtered = [row[0] for row in csv.reader(gzip.open(os.path.join(filter_folder, "barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
     # --Load in features and barcode matricies 
-    feature_names_raw = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs", raw_folder, "features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
-    barcodes_raw = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs", raw_folder, "barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
+    feature_names_raw = [row for row in csv.reader(gzip.open(os.path.join(raw_folder, "features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
+    barcodes_raw = [row[0] for row in csv.reader(gzip.open(os.path.join(raw_folder, "barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
     
     viralcopy_filtered = []
     viralcopy_raw = []
@@ -64,11 +57,11 @@ def integrate_data_2_matrix(args, dfumidict, virus_names):
         feature_names_raw.append((virus_name, virus_name, "Gene Expression"))
 
     # -- unzip matrix file so that it can be opened 
-    arg=['gunzip', "-f", os.path.join(path10x,"outs",filter_folder,"matrix.mtx.gz")]
+    arg=['gunzip', "-f", os.path.join(filter_folder,"matrix.mtx.gz")]
     ef._run_subprocesses(arg, "STATUS: unzipping matrix file", "unzipping matrix file")
 
     # -- Open matrix file 
-    f_in = open(os.path.join(path10x,"outs",filter_folder,"matrix.mtx"), 'r')
+    f_in = open(os.path.join(filter_folder,"matrix.mtx"), 'r')
     lines = f_in.readlines()
 
     # -- Edit header in the matrix file to have the correct new number of genes
@@ -79,7 +72,7 @@ def integrate_data_2_matrix(args, dfumidict, virus_names):
     lines[2]=lines[2]+"\n"
 
     # -- Load edited data into new matrix file 
-    f_in = open(os.path.join(path10x,"outs",filter_folder,"matrix.mtx"), 'w')
+    f_in = open(os.path.join(filter_folder,"matrix.mtx"), 'w')
     for line in lines:
         f_in.write(line)
     for i in viralcopy_filtered:
@@ -87,28 +80,28 @@ def integrate_data_2_matrix(args, dfumidict, virus_names):
     f_in.close()
 
     # -- re zip matrix file file 
-    arg=['gzip', "-f", os.path.join(path10x,"outs",filter_folder,"matrix.mtx")]
+    arg=['gzip', "-f", os.path.join(filter_folder,"matrix.mtx")]
     ef._run_subprocesses(arg, "STATUS: zipping edited matrix file", "zipping edited matrix file")
     
     # -- load new information into new features file 
-    f_in = open(os.path.join(path10x,"outs",filter_folder,"features.tsv"), 'w')
+    f_in = open(os.path.join(filter_folder,"features.tsv"), 'w')
     for i in feature_names_filtered:
         f_in.write(i[0]+"\t"+i[1]+"\t"+i[2]+"\n")
     f_in.close()
 
     # -- re zip features file 
-    arg=['gzip', "-f", os.path.join(path10x,"outs",filter_folder,"features.tsv")]
+    arg=['gzip', "-f", os.path.join(filter_folder,"features.tsv")]
     ef._run_subprocesses(arg, "STATUS: zipping new features files filter folder", "zipping new features file filter folder")
 
     #####-- add data to raw folder files--#####
     print ("STATUS: Integrating pathogen copy counts into 10x matrix and feature files in raw folder")
 
     # -- unzip matrix file so that it can be opened 
-    arg=['gunzip', "-f", os.path.join(path10x,"outs",raw_folder,"matrix.mtx.gz")]
+    arg=['gunzip', "-f", os.path.join(raw_folder,"matrix.mtx.gz")]
     ef._run_subprocesses(arg, "STATUS: unzipping matrix file", "unzipping matrix file")
 
     # -- Open matrix file 
-    f_in = open(os.path.join(path10x,"outs",raw_folder,"matrix.mtx"), 'r')
+    f_in = open(os.path.join(raw_folder,"matrix.mtx"), 'r')
     lines = f_in.readlines()
 
     # -- Edit header in the matrix file to have the correct new number of genes
@@ -118,7 +111,7 @@ def integrate_data_2_matrix(args, dfumidict, virus_names):
     lines[2]=" ".join(str(v) for v in larray)
     lines[2]=lines[2]+"\n"
     # -- Load edited data into new matrix file 
-    f_in = open(os.path.join(path10x,"outs",raw_folder,"matrix.mtx"), 'w')
+    f_in = open(os.path.join(raw_folder,"matrix.mtx"), 'w')
     for line in lines:
         f_in.write(line)
     for i in viralcopy_raw:
@@ -126,41 +119,37 @@ def integrate_data_2_matrix(args, dfumidict, virus_names):
     f_in.close()
 
     # -- re zip matrix file 
-    arg=['gzip', "-f", os.path.join(path10x,"outs",raw_folder,"matrix.mtx")]
+    arg=['gzip', "-f", os.path.join(raw_folder,"matrix.mtx")]
     ef._run_subprocesses(arg, "STATUS: zipping edited matrix file", "zipping edited matrix file")
 
     # -- load new information into new features file 
-    f_in = open(os.path.join(path10x,"outs",raw_folder,"features.tsv"), 'w')
+    f_in = open(os.path.join(raw_folder,"features.tsv"), 'w')
     for i in feature_names_raw:
         f_in.write(i[0]+"\t"+i[1]+"\t"+i[2]+"\n")
     f_in.close()
 
     # -- re zip features file 
-    arg=['gzip', "-f", os.path.join(path10x,"outs",raw_folder,"features.tsv")]
+    arg=['gzip', "-f", os.path.join(raw_folder,"features.tsv")]
     ef._run_subprocesses(arg, "STATUS: zipping new features files raw folder", "zipping new features file raw folder")
 
 def integrate_pathogenes_data_2_matrix(args, dfumidict):
     path10x = args.path10x
 
-    if args.overwrite_feature_matrix:
-        filter_folder="filtered_feature_bc_matrix"
-        raw_folder="raw_feature_bc_matrix"
-    else:
-        filter_folder="filtered_feature_bc_matrix_"+"scPathoQuant_"+args.aligner
-        raw_folder="raw_feature_bc_matrix_"+"scPathoQuant_"+args.aligner
+    filter_folder=os.path.join(args.output_path, "filtered_feature_bc_matrix")
+    raw_folder=os.path.join(args.output_path,"raw_feature_bc_matrix")
 
-        if os.path.isdir(os.path.join(path10x, "outs", filter_folder)) is False:
-           shutil.copytree(os.path.join(path10x, "outs", "filtered_feature_bc_matrix"), os.path.join(path10x, "outs", filter_folder), copy_function = shutil.copy)
-        if os.path.isdir(os.path.join(path10x, "outs", raw_folder)) is False:
-           shutil.copytree(os.path.join(path10x, "outs", "raw_feature_bc_matrix"), os.path.join(path10x,  "outs", raw_folder), copy_function = shutil.copy)
+    if os.path.isdir(filter_folder) is False:
+        shutil.copytree(os.path.join(path10x, "outs", "filtered_feature_bc_matrix"), filter_folder, copy_function = shutil.copy)
+    if os.path.isdir(os.path.join(path10x, "outs", raw_folder)) is False:
+        shutil.copytree(os.path.join(path10x, "outs", "raw_feature_bc_matrix"), raw_folder, copy_function = shutil.copy)
 
     #####-- add data to filter folder files --#####
     print ("STATUS: Integrating pathogen gene counts into 10x matrix and feature files in filter folders")
     # --Load in features and barcode matricies 
-    feature_names_filtered = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs",filter_folder,"features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
-    barcodes_filtered = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs",filter_folder,"barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
-    feature_names_raw = [row for row in csv.reader(gzip.open(os.path.join(path10x,"outs",raw_folder,"features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
-    barcodes_raw = [row[0] for row in csv.reader(gzip.open(os.path.join(path10x,"outs",raw_folder,"barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
+    feature_names_filtered = [row for row in csv.reader(gzip.open(os.path.join(filter_folder,"features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
+    barcodes_filtered = [row[0] for row in csv.reader(gzip.open(os.path.join(filter_folder,"barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
+    feature_names_raw = [row for row in csv.reader(gzip.open(os.path.join(raw_folder,"features.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
+    barcodes_raw = [row[0] for row in csv.reader(gzip.open(os.path.join(raw_folder,"barcodes.tsv.gz"), "rt", encoding="utf8"), delimiter="\t")]
     
     counts4genes_filtered = list()
     counts4genes_raw = list()
@@ -188,11 +177,11 @@ def integrate_pathogenes_data_2_matrix(args, dfumidict):
         feature_names_raw.append((gene, gene, "Gene Expression"))
 
     # -- unzip matrix file so that it can be opened 
-    arg=['gunzip', "-f", os.path.join(path10x,"outs",filter_folder,"matrix.mtx.gz")]
+    arg=['gunzip', "-f", os.path.join(filter_folder,"matrix.mtx.gz")]
     ef._run_subprocesses(arg, "STATUS: unzipping matrix file", "unzipping matrix file")
 
     # -- Open matrix file 
-    f_in = open(os.path.join(path10x,"outs",filter_folder,"matrix.mtx"), 'r')
+    f_in = open(os.path.join(filter_folder,"matrix.mtx"), 'r')
     lines = f_in.readlines()
 
     # -- Edit header in the matrix file to have the correct new number of genes
@@ -203,7 +192,7 @@ def integrate_pathogenes_data_2_matrix(args, dfumidict):
     lines[2]=lines[2]+"\n"
 
     # -- Load edited data into new matrix file 
-    f_in = open(os.path.join(path10x,"outs",filter_folder,"matrix.mtx"), 'w')
+    f_in = open(os.path.join(filter_folder,"matrix.mtx"), 'w')
     for line in lines:
         f_in.write(line)
     for g in counts4genes_filtered:
@@ -211,28 +200,28 @@ def integrate_pathogenes_data_2_matrix(args, dfumidict):
     f_in.close()
 
     # -- re zip matrix file 
-    arg=['gzip', "-f", os.path.join(path10x,"outs",filter_folder,"matrix.mtx")]
+    arg=['gzip', "-f", os.path.join(filter_folder,"matrix.mtx")]
     ef._run_subprocesses(arg, "STATUS: zipping new matrix file", "zipping new matrix file")
 
     # -- load new information into new features file 
-    f_in = open(os.path.join(path10x,"outs",filter_folder,"features.tsv"), 'w')
+    f_in = open(os.path.join(filter_folder,"features.tsv"), 'w')
     for i in feature_names_filtered:
         f_in.write(i[0]+"\t"+i[1]+"\t"+i[2]+"\n")
     f_in.close()
 
     # -- re zip features file 
-    arg=['gzip', "-f", os.path.join(path10x,"outs",filter_folder,"features.tsv")]
+    arg=['gzip', "-f", os.path.join(filter_folder,"features.tsv")]
     ef._run_subprocesses(arg, "STATUS: zipping new features file in feature folder", "zipping new features file in feature folder")
 
     #####--add data to raw folder files--#####
     print ("STATUS: Integrating pathogen gene counts into 10x matrix and feature files in raw folder")
 
     # -- unzip matrix file so that it can be opened 
-    arg=['gunzip', "-f", os.path.join(path10x,"outs",raw_folder,"matrix.mtx.gz")]
+    arg=['gunzip', "-f", os.path.join(raw_folder,"matrix.mtx.gz")]
     ef._run_subprocesses(arg, "STATUS: unzipping matrix file", "unzipping matrix file")
 
     # -- Open matrix file 
-    f_in = open(os.path.join(path10x,"outs",raw_folder,"matrix.mtx"), 'r')
+    f_in = open(os.path.join(raw_folder,"matrix.mtx"), 'r')
     lines = f_in.readlines()
 
     # -- Edit header in the matrix file to have the correct new number of genes
@@ -243,7 +232,7 @@ def integrate_pathogenes_data_2_matrix(args, dfumidict):
     lines[2]=lines[2]+"\n"
 
     # -- Load edited data into new matrix file 
-    f_in = open(os.path.join(path10x,"outs",raw_folder,"matrix.mtx"), 'w')
+    f_in = open(os.path.join(raw_folder,"matrix.mtx"), 'w')
     for line in lines:
         f_in.write(line)
     for g in counts4genes_raw:
@@ -251,15 +240,15 @@ def integrate_pathogenes_data_2_matrix(args, dfumidict):
     f_in.close()
 
     # -- re zip matrix file 
-    arg=['gzip', "-f", os.path.join(path10x,"outs",raw_folder,"matrix.mtx")]
+    arg=['gzip', "-f", os.path.join(raw_folder,"matrix.mtx")]
     ef._run_subprocesses(arg, "STATUS: zipping new matrix file", "zipping new matrix file")
 
     # -- load new information into new features file 
-    f_in = open(os.path.join(path10x,"outs",raw_folder,"features.tsv"), 'w')
+    f_in = open(os.path.join(raw_folder,"features.tsv"), 'w')
     for i in feature_names_filtered:
         f_in.write(i[0]+"\t"+i[1]+"\t"+i[2]+"\n")
     f_in.close()
 
     # -- re zip features file 
-    arg=['gzip', "-f", os.path.join(path10x,"outs",raw_folder,"features.tsv")]
+    arg=['gzip', "-f", os.path.join(raw_folder,"features.tsv")]
     ef._run_subprocesses(arg, "STATUS: zipping new features file in raw folder", "zipping new features file in raw folder")    

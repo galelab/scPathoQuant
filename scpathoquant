@@ -30,7 +30,6 @@ def parse_arguments():
     parser.add_argument("-out_filtered", "--output_filtered_folder", type=str, required=False, default="filtered_feature_bc_matrix")
     parser.add_argument("-in_raw", "--input_raw_folder", type=str, required=False, default="raw_feature_bc_matrix")
     parser.add_argument("-out_raw", "--output_raw_folder", type=str, required=False, default="raw_feature_bc_matrix")
-    parser.add_argument("-overwrite", "--overwrite_feature_matrix", required=False, action="store_true")
     parser.add_argument("--tmp_removal", required=False, action="store_true")
     parser.add_argument("--bbmap_params",  nargs="+")
     parser.add_argument("--bowtie2_params", nargs="+")

@@ -34,7 +34,6 @@ Set the following parameters
 * -p = number of processors (defualt = 1)
 * -p2genome = path/to/pathogenreferencegenome/ - in this folder should be at most 2 files 1) the fasta file with the pathogen reference genome sequence and 2) pathogen gtf file (not mandatory this can just run with fasta file with the pathogen genome).  Note: In the fasta file the header will be used to quantify the number of pathogen total reads, it is recommended that if the fasta header is a complicated name it be simplified (i.e. > HIV_virus).  The Sars-CoV-2 reference genome and gtf file can be found [here](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_009858895.2/)
 * -align = alignment tool bbmap (default) or bowtie2
-* -overwrite = will overwrite the files directly in the 10x filtered_feature_bc_matrix folder.  If not specified a copy of this folder will be made and then information about pathogen count information will be added to the files in this copied folder 
 * --bbmap_params = parameters specific to the bbmap alignment tool  
 * --bowtie2_params = parameters specific to the bowtie2 alignment tool
 * --tmp_removal = if specified will remove the temporary directory (_tmp/) of files used by scpathoquant (these files can be large so if space is an issue these should be deleted)
@@ -83,22 +82,22 @@ Output files by scPathoQuant
 * pathogen_al_counts.csv - total number of reads mapping to the pathogen in each cell 
 * pathogen_al_gene_counts.csv - number of reads mapping to pathoen genes in each cell 
 * pathogen_al.bam - reads mapped to pathogen
-* pathogen_al_mapped.sam - reads mapped to only pathogen (no unmapped reads)
+* pathogen_al_mapped.bam - reads mapped to only pathogen (no unmapped reads)
 * pathogen_al_mapped_sort.bam - sorted reads mapped to pathogen (can be used to visualize reads in [IGV](https://www.igv.org/))
 * pathogen_al_mapped_sort.bam.bai - index file to pathogen_al_sort.bam
 * pathogen_al_mapped.fq.gz - fastq file of mapped reads to pathogens of interest.  Can be used to further perform phylogenetic and clade analyses 
 * pathogen_al_sort_counts.sam - htseq output reads mapping to pathogen
 * pathogen_genes_al_sort_counts.sam - htseq output reads mapping to individual pathogen genes (will not be produced if pathogen/viral gtf is not provided)
 * Overwrites original 10x data provided to include pathogen counts and pathogen gene counts (if gtf file is provided)
-* Path/to/10x/sample/outs/filtered_feature_bc_matrix_scPathoQuant_bbmap - files that can be integrated into seurat with pathogen counts 
-* Path/to/10x/sample/outs/raw_feature_bc_matrix_scPathoQuant_bbmap - files that can be integrated into seurat with pathogen counts (this is not always needed)
+* filtered_feature_bc_matrix - files that can be integrated into seurat with pathogen counts 
+* raw_feature_bc_matrix - files that can be integrated into seurat with pathogen counts (this is not always needed)
 
 
 ### Loading data with pathogen counts into Seurat 
 ----------------------------------------------
 Example seurat command in R
 ```bash 
-seurat.object.data <- Read10X(data.dir ="Path/to/10x/sample/outs/filtered_feature_bc_matrix_scPathoQuant_bbmap")
+seurat.object.data <- Read10X(data.dir ="output_scPathoQuant/filtered_feature_bc_matrix")
 ```
 
 ### Output files in _tmp/ folder  
