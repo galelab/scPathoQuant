@@ -47,10 +47,10 @@ scpathoquant -10x path/to/10x/sample -op path/for/results -p 8 -p2genome path/to
 scpathoquant -10x path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/pathogen/fastafilefolder --tmp_removal
 ```
 ```bash 
-scpathoquant -10x path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/pathogen/fastafilefolder --bbmap_params "--semiperfectmode"
+scpathoquant -10x path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/pathogen/fastafilefolder --bbmap_params="--semiperfectmode"
 ```
 ```bash 
-scpathoquant -10x path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder -align bowtie2 --bowtie2_params "--very-sensitive --non-deterministic"
+scpathoquant -10x path/to/10x/sample -op path/for/results -p 8 -p2genome path/to/viral/fastafilefolder -align bowtie2 --bowtie2_params="--very-sensitive --non-deterministic"
 ```
 
 Example runs (with Docker):
@@ -61,10 +61,10 @@ docker run --rm -v path/to/10x/sample:/app/input -v path/to/pathogen/fastafilefo
 docker run --rm -v path/to/10x/sample:/app/input -v path/to/pathogen/fastafilefolder:/app/genome -v path/for/results:/app/output scpathoquant -10x /app/input -op /app/output -p 8 -p2genome /app/genome --tmp_removal
 ```
 ```bash
-docker run --rm -v path/to/10x/sample:/app/input -v path/to/pathogen/fastafilefolder:/app/genome -v path/for/results:/app/output scpathoquant -10x /app/input -op /app/output -p 8 -p2genome /app/genome --bbmap_params "--semiperfectmode"
+docker run --rm -v path/to/10x/sample:/app/input -v path/to/pathogen/fastafilefolder:/app/genome -v path/for/results:/app/output scpathoquant -10x /app/input -op /app/output -p 8 -p2genome /app/genome --bbmap_params="--semiperfectmode"
 ```
 ```bash
-docker run --rm -v path/to/10x/sample:/app/input -v path/to/viral/fastafilefolder:/app/genome -v path/for/results:/app/output scpathoquant -10x /app/input -op /app/output -p 8 -p2genome /app/genome -align bowtie2 --bowtie2_params "--very-sensitive --non-deterministic"
+docker run --rm -v path/to/10x/sample:/app/input -v path/to/viral/fastafilefolder:/app/genome -v path/for/results:/app/output scpathoquant -10x /app/input -op /app/output -p 8 -p2genome /app/genome -align bowtie2 --bowtie2_params="--very-sensitive --non-deterministic"
 ```
 
 ### Output files 
