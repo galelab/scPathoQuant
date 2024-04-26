@@ -20,7 +20,7 @@ from spq.visualization import viz
 def parse_arguments():
     parser = argparse.ArgumentParser(prog="scPathoQuant", description="Quantify sc viral/bacterial mapping reads")
     parser.add_argument("-10x", "--path10x", type=str, required=True)
-    parser.add_argument("-op", "--output_path", default="output_scviralquant")
+    parser.add_argument("-op", "--output_path", default="output_scPathoQuant")
     parser.add_argument("-p", "--processors", default=1)
     parser.add_argument("-p2genome", "--path2genome", type=str, required=True)
     parser.add_argument("-align", "--aligner", type=str, default="bbmap")
