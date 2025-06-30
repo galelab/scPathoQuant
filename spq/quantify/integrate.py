@@ -12,8 +12,8 @@ import spq.extra_functions as ef
 def integrate_data_2_matrix(args, dfumidict, virus_names):
     path10x = args.path10x
 
-    filter_folder=os.path.join(args.output_path, "filtered_feature_bc_matrix")
-    raw_folder=os.path.join(args.output_path,"raw_feature_bc_matrix")
+    filter_folder=os.path.join(args.output_path, args.output_filtered_folder)
+    raw_folder=os.path.join(args.output_path, args.output_raw_folder)
     if os.path.isdir(filter_folder) is False:
         shutil.copytree(os.path.join(path10x, "outs", args.input_filtered_folder), filter_folder, copy_function = shutil.copy)
     else:
@@ -135,13 +135,13 @@ def integrate_data_2_matrix(args, dfumidict, virus_names):
 def integrate_pathogenes_data_2_matrix(args, dfumidict):
     path10x = args.path10x
 
-    filter_folder=os.path.join(args.output_path, "filtered_feature_bc_matrix")
-    raw_folder=os.path.join(args.output_path,"raw_feature_bc_matrix")
+    filter_folder=os.path.join(args.output_path, args.output_filtered_folder)
+    raw_folder=os.path.join(args.output_path, args.output_raw_folder)
 
     if os.path.isdir(filter_folder) is False:
-        shutil.copytree(os.path.join(path10x, "outs", "filtered_feature_bc_matrix"), filter_folder, copy_function = shutil.copy)
-    if os.path.isdir(os.path.join(path10x, "outs", raw_folder)) is False:
-        shutil.copytree(os.path.join(path10x, "outs", "raw_feature_bc_matrix"), raw_folder, copy_function = shutil.copy)
+        shutil.copytree(os.path.join(path10x, "outs", args.input_filtered_folder), filter_folder, copy_function = shutil.copy)
+    if os.path.isdir(raw_folder) is False:
+        shutil.copytree(os.path.join(path10x, "outs", args.input_raw_folder), raw_folder, copy_function = shutil.copy)
 
     #####-- add data to filter folder files --#####
     print ("STATUS: Integrating pathogen gene counts into 10x matrix and feature files in filter folders")
