@@ -41,6 +41,7 @@ def generate_viral_copy_plots(args, dfumidict):
             g.set_figwidth(4)
             g.savefig(os.path.join(args.output_path, "pathogen_copy_"+virusname_rename+".png"), dpi=500)
             g.savefig(os.path.join(args.output_path, "pathogen_copy_"+virusname_rename+".svg"), dpi=500)
+            ax.fig.clf() 
 
         else:
             print ("STATUS: "+virus_name+" No cells have viral reads not generating violin plot")
@@ -64,7 +65,6 @@ def generate_viral_gene_plots(args, dfumidict):
             g.set_figwidth(6)
             g.savefig(os.path.join(args.output_path, "pathogen_genes_"+virusname_rename+".png"), dpi=500)
             g.savefig(os.path.join(args.output_path, "pathogen_genes_"+virusname_rename+".svg"), dpi=500)
-            ax.fig.clf() 
 
         else:
             print ("STATUS: No cells have viral "+virus_name+" gene read counts not generating violin plot for viral genes")
